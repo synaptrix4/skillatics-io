@@ -1,5 +1,3 @@
-Here is a detailed `README.md` file for your project based on the provided code.
-
 -----
 
 # Skillatics (skillatics-io)
