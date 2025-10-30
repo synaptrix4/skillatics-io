@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { listUsers, addQuestion, uploadQuestionsCsv, adminListTopics, adminCreateTopic, adminUpdateTopic, adminDeleteTopic } from '../lib/api'
 import "react-quill/dist/quill.snow.css"; // Add this import at the top level once
 import ReactQuill from "react-quill";
+import SectionHeader from '../components/SectionHeader'
 
 export default function AdminDashboard() {
 	const [users, setUsers] = useState([])
@@ -47,6 +48,7 @@ export default function AdminDashboard() {
 
     return (
         <div className="container-page py-8">
+            <SectionHeader eyebrow="Admin" title="Dashboard" align="left" />
             <div className="grid gap-6 lg:grid-cols-2">
                 <div className="rounded-xl border bg-white p-4 shadow-sm">
                     <div className="flex items-center justify-between">
@@ -112,7 +114,10 @@ export default function AdminDashboard() {
                 <div className="rounded-xl border bg-white p-4 shadow-sm lg:col-span-2">
                     <div className="flex items-center justify-between">
                         <h3 className="text-lg font-medium">Manage Topics</h3>
-                        <button className="text-sm text-indigo-600 hover:underline" onClick={refreshTopics}>Refresh</button>
+                        <div>
+                            <Link to="/admin/topics" className="text-sm text-indigo-700 underline mr-5">Manage All Topics</Link>
+                            <button className="text-sm text-indigo-600 hover:underline" onClick={refreshTopics}>Refresh</button>
+                        </div>
                     </div>
                     <div className="mt-4 grid gap-4 lg:grid-cols-2">
                         <div>

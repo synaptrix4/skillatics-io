@@ -1,50 +1,31 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { fetchTopics } from '../lib/api'
+import SectionHeader from '../components/SectionHeader'
+import Card from '../components/ui/Card'
+import { PrimaryButton, SecondaryButton } from '../components/ui/Button'
 
 export default function StudentLearnDashboard() {
-    const [data, setData] = useState({ generalAptitude: [], technicalAptitude: [] })
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        let mounted = true
-        fetchTopics()
-            .then(r => { if (mounted) setData(r.data || { generalAptitude: [], technicalAptitude: [] }) })
-            .finally(() => { if (mounted) setLoading(false) })
-        return () => { mounted = false }
-    }, [])
-
-    if (loading) return <div className="container-page py-8">Loading...</div>
-
     return (
-        <div className="container-page py-8">
-            <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-semibold">Learn</h2>
-                <div className="flex items-center gap-3 text-sm">
-                    <Link className="rounded-md bg-indigo-600 px-4 py-2 text-white" to="/test">Start Adaptive Test</Link>
-                    <Link className="rounded-md border px-4 py-2" to="/analytics">View My Analytics</Link>
-                </div>
+        <div className="min-h-[70vh] py-6">
+            <SectionHeader eyebrow="Start learning" title="What would you like to learn today?" />
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
+                <Link to="/student/general" className="group">
+                    <Card className="text-center transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+                        <span className="block mb-2 text-indigo-700 text-4xl">Σ</span>
+                        <div className="text-lg font-semibold">Learn General Aptitude</div>
+                        <div className="mt-1 text-sm text-gray-600">Quantitative, verbal, logical and more</div>
+                    </Card>
+                </Link>
+                <Link to="/student/technical" className="group">
+                    <Card className="text-center transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+                        <span className="block mb-2 text-violet-700 text-4xl">{`{}`}</span>
+                        <div className="text-lg font-semibold">Learn Technical Aptitude</div>
+                        <div className="mt-1 text-sm text-gray-600">DSA, OOP, DBMS and CS fundamentals</div>
+                    </Card>
+                </Link>
             </div>
-
-            <Section title="General Aptitude" items={data.generalAptitude} />
-            <Section title="Technical Aptitude" items={data.technicalAptitude} />
-        </div>
-    )
-}
-
-function Section({ title, items }) {
-    if (!items || items.length === 0) return null
-    return (
-        <div className="mt-8">
-            <h3 className="text-lg font-medium">{title}</h3>
-            <div className="mt-3 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-                {items.map(t => (
-                    <Link key={t._id} to={`/learn/topic/${t._id}`} className="group rounded-xl border bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                        <div className="flex h-10 w-10 items-center justify-center rounded bg-indigo-600 text-white">{t.name?.[0] || '?'}</div>
-                        <div className="mt-2 font-medium">{t.name}</div>
-                        <div className="text-xs text-gray-500">{t.category}</div>
-                    </Link>
-                ))}
+            <div className="mt-8 flex flex-wrap gap-4 justify-center">
+                <PrimaryButton as="a" href="/test">Start Adaptive Test</PrimaryButton>
+                <SecondaryButton as="a" href="/analytics">View My Analytics</SecondaryButton>
             </div>
         </div>
     )

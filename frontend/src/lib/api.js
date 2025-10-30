@@ -11,6 +11,11 @@ api.interceptors.request.use((config) => {
 	return config
 })
 
+// OTP Auth flows
+export const requestOtp = (payload) => api.post('/auth/request-otp', payload)
+export const verifyOtp = (payload) => api.post('/auth/verify-otp', payload)
+export const updateProfile = (payload) => api.post('/auth/update-profile', payload)
+
 // Auth
 export const register = (payload) => api.post('/auth/register', payload)
 export const login = (payload) => api.post('/auth/login', payload)

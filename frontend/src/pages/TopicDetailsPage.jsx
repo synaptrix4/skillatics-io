@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { fetchTopic, fetchTopicQuestions } from '../lib/api'
 import Questionnaire from '../components/Questionnaire'
+import SectionHeader from '../components/SectionHeader'
+import Card from '../components/ui/Card'
 
 export default function TopicDetailsPage() {
     const { topicId } = useParams()
@@ -23,23 +25,23 @@ export default function TopicDetailsPage() {
         return () => { mounted = false }
     }, [topicId])
 
-    if (loading) return <div className="container-page py-8">Loading...</div>
-    if (!topic) return <div className="container-page py-8">Not found</div>
+    if (loading) return <div>Loading...</div>
+    if (!topic) return <div>Not found</div>
 
     return (
-        <div className="container-page py-8">
-            <h2 className="text-2xl font-semibold">{topic.name}</h2>
+        <>
+            <SectionHeader eyebrow={topic.category || 'Topic'} title={topic.name} align="left" />
             <div className="mt-4 flex gap-2">
                 <TabButton active={tab==='theory'} onClick={() => setTab('theory')}>Theory</TabButton>
                 <TabButton active={tab==='shortcuts'} onClick={() => setTab('shortcuts')}>Shortcuts</TabButton>
                 <TabButton active={tab==='questions'} onClick={() => setTab('questions')}>Questionnaire</TabButton>
             </div>
-            <div className="mt-4 rounded-xl border bg-white p-4 shadow-sm">
+            <Card className="mt-4">
                 {tab === 'theory' && <RichText text={topic.theory} />}
                 {tab === 'shortcuts' && <RichText text={topic.shortcuts} />}
                 {tab === 'questions' && <Questionnaire questions={questions} />}
-            </div>
-        </div>
+            </Card>
+        </>
     )
 }
 

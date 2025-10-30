@@ -1,9 +1,12 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
-import Login from './pages/Login'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
 import LandingPage from './pages/LandingPage'
 import Test from './pages/Test'
 import StudentLearnDashboard from './pages/StudentLearnDashboard'
+import StudentGeneralLearnDashboard from './pages/StudentGeneralLearnDashboard'
+import StudentTechnicalLearnDashboard from './pages/StudentTechnicalLearnDashboard'
 import AnalyticsDashboard from './pages/AnalyticsDashboard'
 import FacultyDashboard from './pages/FacultyDashboard'
 import AdminDashboard from './pages/AdminDashboard'
@@ -12,6 +15,9 @@ import TopicDetailsPage from './pages/TopicDetailsPage'
 import { getCurrentUser } from './lib/auth'
 import Navbar from './components/Navbar'
 import Page from './components/Page'
+import StudentLayout from './pages/StudentLayout'
+import CompleteProfile from './pages/CompleteProfile'
+import AdminTopics from './pages/AdminTopics'
 
 function Protected({ children, roles }) {
 	const user = getCurrentUser()
@@ -28,14 +34,19 @@ export default function App() {
             <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<HomeOrRedirect />} />
-                    <Route path="/login" element={<Page><Login /></Page>} />
+                    <Route path="/login" element={<Page><LoginPage /></Page>} />
+                    <Route path="/register" element={<Page><RegisterPage /></Page>} />
+                    <Route path="/complete-profile" element={<CompleteProfile />} />
                     <Route path="/test" element={<Page><Protected><Test /></Protected></Page>} />
-                    <Route path="/student" element={<Page><Protected roles={['Student']}><StudentLearnDashboard /></Protected></Page>} />
-                    <Route path="/analytics" element={<Page><Protected roles={['Student']}><AnalyticsDashboard /></Protected></Page>} />
-                    <Route path="/learn/topic/:topicId" element={<Page><Protected roles={['Student']}><TopicDetailsPage /></Protected></Page>} />
+                    <Route path="/student" element={<Protected roles={['Student']}><StudentLayout><StudentLearnDashboard /></StudentLayout></Protected>} />
+                    <Route path="/student/general" element={<Protected roles={['Student']}><StudentLayout><StudentGeneralLearnDashboard /></StudentLayout></Protected>} />
+                    <Route path="/student/technical" element={<Protected roles={['Student']}><StudentLayout><StudentTechnicalLearnDashboard /></StudentLayout></Protected>} />
+                    <Route path="/analytics" element={<Protected roles={['Student']}><StudentLayout><AnalyticsDashboard /></StudentLayout></Protected>} />
+                    <Route path="/learn/topic/:topicId" element={<Protected roles={['Student']}><StudentLayout><TopicDetailsPage /></StudentLayout></Protected>} />
                     <Route path="/faculty" element={<Page><Protected roles={['TPO/Faculty','Admin']}><FacultyDashboard /></Protected></Page>} />
                     <Route path="/admin" element={<Page><Protected roles={['Admin']}><AdminDashboard /></Protected></Page>} />
                     <Route path="/admin/manage-users" element={<Page><Protected roles={['Admin']}><ManageUsers /></Protected></Page>} />
+                    <Route path="/admin/topics" element={<Page><Protected roles={['Admin']}><AdminTopics /></Protected></Page>} />
                 </Routes>
             </AnimatePresence>
         </div>

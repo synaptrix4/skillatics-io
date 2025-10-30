@@ -1,49 +1,34 @@
-import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { requestOtp, verifyOtp } from '../lib/api'
 import { saveAuth } from '../lib/auth'
+import SectionHeader from '../components/SectionHeader'
+import Card from '../components/ui/Card'
+import { PrimaryButton } from '../components/ui/Button'
 
-export default function Login() {
-    const location = useLocation()
+export default function RegisterPage() {
     const navigate = useNavigate()
-    const [mode, setMode] = useState('login') // 'login' | 'register'
-    const [form, setForm] = useState({ email: '', name: '' })
+    const [form, setForm] = useState({ name: '', email: '' })
     const [step, setStep] = useState(1)
     const [otp, setOtp] = useState('')
     const [error, setError] = useState('')
     const [info, setInfo] = useState('')
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        const params = new URLSearchParams(location.search)
-        const m = params.get('mode')
-        if (m === 'register') setMode('register')
-    }, [location.search])
-
     function nextStep() {
         setError('')
         setLoading(true)
-        requestOtp({
-            email: form.email,
-            purpose: mode,
-            ...(mode === 'register' ? { name: form.name } : {})
-        }).then(() => {
-            setInfo('OTP sent to your email address.')
-            setStep(2)
-        }).catch(err => {
-            setError(err.response?.data?.error || 'Failed to send OTP')
-        }).finally(() => setLoading(false))
+        requestOtp({ email: form.email, name: form.name, purpose: 'register' })
+          .then(() => { setInfo('OTP sent to your email address.'); setStep(2); })
+          .catch(err => { setError(err.response?.data?.error || 'Failed to send OTP'); })
+          .finally(() => setLoading(false))
     }
 
-    function handleVerify(e) {
+    async function handleVerify(e) {
         e.preventDefault()
-        setError('')
-        setLoading(true)
-        verifyOtp({
-            email: form.email,
-            otp,
-            ...(mode === 'register' ? { name: form.name } : {})
-        }).then(resp => {
+        setError(''); setLoading(true)
+        try {
+            const resp = await verifyOtp({ email: form.email, otp, name: form.name })
             saveAuth(resp.data.token, resp.data.user)
             if (!resp.data.user.profile_complete) {
                 navigate('/complete-profile')
@@ -52,9 +37,11 @@ export default function Login() {
                 const redirect = role === 'Admin' ? '/admin' : role === 'TPO/Faculty' ? '/faculty' : '/student'
                 window.location.href = redirect
             }
-        }).catch(err => {
+        } catch (err) {
             setError(err.response?.data?.error || 'Failed to verify OTP')
-        }).finally(() => setLoading(false))
+        } finally {
+            setLoading(false)
+        }
     }
 
     function handleFirst(e) {
@@ -64,27 +51,21 @@ export default function Login() {
 
     return (
         <div className="mx-auto mt-12 w-full max-w-md">
-            <div className="rounded-2xl border bg-white p-6 shadow-sm">
-                <h2 className="text-center text-2xl font-semibold">
-                    {mode === 'login' ? 'OTP Login' : 'Create your account'}
-                </h2>
-                <p className="mt-1 text-center text-sm text-gray-600">
-                    {mode === 'login' ? 'Enter your email to start' : 'Register with email and OTP'}
-                </p>
+            <SectionHeader eyebrow="Get started" title="Create your account" />
+            <Card className="mt-6">
+                <p className="text-center text-sm text-gray-600">Register with your email, name, and OTP</p>
                 <form onSubmit={step === 1 ? handleFirst : handleVerify} className="mt-6 space-y-4">
                     {step === 1 && (
                         <>
-                            {mode === 'register' && (
-                                <div className="space-y-1">
-                                    <label className="text-sm font-medium">Name</label>
-                                    <input
-                                        className="w-full rounded-md border px-3 py-2 outline-none ring-indigo-500 focus:ring"
-                                        value={form.name}
-                                        onChange={e => setForm({ ...form, name: e.target.value })}
-                                        required
-                                    />
-                                </div>
-                            )}
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium">Name</label>
+                                <input
+                                    className="w-full rounded-md border px-3 py-2 outline-none ring-indigo-500 focus:ring"
+                                    value={form.name}
+                                    onChange={e => setForm({ ...form, name: e.target.value })}
+                                    required
+                                />
+                            </div>
                             <div className="space-y-1">
                                 <label className="text-sm font-medium">Email</label>
                                 <input
@@ -124,25 +105,21 @@ export default function Login() {
                     )}
                     {error && <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
                     {info && <div className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">{info}</div>}
-                    <button
+                    <PrimaryButton
                         type="submit"
                         disabled={loading || (step === 2 && (!otp || otp.length !== 6))}
-                        className="w-full rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
+                        className="w-full"
                     >
                         {step === 1 ? (loading ? 'Sending OTP...' : 'Request OTP') : (loading ? 'Verifying...' : 'Verify OTP')}
-                    </button>
+                    </PrimaryButton>
                 </form>
                 <div className="mt-4 text-center text-sm">
-                    <button
-                        className="text-indigo-600 hover:underline"
-                        onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setStep(1); setForm({ email: '', name: '' }); setOtp(''); setError(''); setInfo(''); }}
-                    >
-                        Switch to {mode === 'login' ? 'Register' : 'Login'}
-                    </button>
+                    <a href="/login" className="text-indigo-600 hover:underline">Already have an account? Login</a>
                 </div>
-            </div>
+            </Card>
         </div>
     )
 }
+
 
 
