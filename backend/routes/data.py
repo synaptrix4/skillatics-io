@@ -63,3 +63,35 @@ def my_topic_averages():
     out = [{"topic": d.get("_id"), "avgScore": d.get("avgScore", 0), "tests": d.get("tests", 0)} for d in data]
     return jsonify(out)
 
+
+@data_bp.get("/student-stats")
+@jwt_required()
+def student_stats():
+    claims = get_jwt()
+    if claims.get("role") not in ["TPO/Faculty", "Admin"]:
+        return jsonify({"error": "Forbidden"}), 403
+
+    pipeline = [
+        {"$group": {
+            "_id": "$studentId",
+            "tests": {"$sum": 1},
+            "avgScore": {"$avg": "$score"},
+            "lastCompleted": {"$max": "$completedAt"},
+        }},
+        {"$sort": {"avgScore": -1}},
+    ]
+    rows = list(mongo.db.test_results.aggregate(pipeline))
+    # Attach user names/emails
+    out = []
+    for r in rows:
+        sid = r.get("_id")
+        user = mongo.db.users.find_one({"_id": sid}) if sid else None
+        out.append({
+            "studentId": str(sid) if sid else None,
+            "name": user.get("name") if user else None,
+            "email": user.get("email") if user else None,
+            "tests": r.get("tests", 0),
+            "avgScore": r.get("avgScore", 0),
+            "lastCompleted": r.get("lastCompleted"),
+        })
+    return jsonify(out)

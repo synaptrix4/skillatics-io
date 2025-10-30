@@ -3,10 +3,12 @@ import { AnimatePresence } from 'framer-motion'
 import Login from './pages/Login'
 import LandingPage from './pages/LandingPage'
 import Test from './pages/Test'
-import StudentDashboard from './pages/StudentDashboard'
+import StudentLearnDashboard from './pages/StudentLearnDashboard'
+import AnalyticsDashboard from './pages/AnalyticsDashboard'
 import FacultyDashboard from './pages/FacultyDashboard'
 import AdminDashboard from './pages/AdminDashboard'
 import ManageUsers from './pages/ManageUsers'
+import TopicDetailsPage from './pages/TopicDetailsPage'
 import { getCurrentUser } from './lib/auth'
 import Navbar from './components/Navbar'
 import Page from './components/Page'
@@ -28,7 +30,9 @@ export default function App() {
                     <Route path="/" element={<HomeOrRedirect />} />
                     <Route path="/login" element={<Page><Login /></Page>} />
                     <Route path="/test" element={<Page><Protected><Test /></Protected></Page>} />
-                    <Route path="/student" element={<Page><Protected roles={['Student']}><StudentDashboard /></Protected></Page>} />
+                    <Route path="/student" element={<Page><Protected roles={['Student']}><StudentLearnDashboard /></Protected></Page>} />
+                    <Route path="/analytics" element={<Page><Protected roles={['Student']}><AnalyticsDashboard /></Protected></Page>} />
+                    <Route path="/learn/topic/:topicId" element={<Page><Protected roles={['Student']}><TopicDetailsPage /></Protected></Page>} />
                     <Route path="/faculty" element={<Page><Protected roles={['TPO/Faculty','Admin']}><FacultyDashboard /></Protected></Page>} />
                     <Route path="/admin" element={<Page><Protected roles={['Admin']}><AdminDashboard /></Protected></Page>} />
                     <Route path="/admin/manage-users" element={<Page><Protected roles={['Admin']}><ManageUsers /></Protected></Page>} />

@@ -18,6 +18,7 @@ export const login = (payload) => api.post('/auth/login', payload)
 // Admin
 export const listUsers = () => api.get('/admin/users')
 export const addQuestion = (payload) => api.post('/admin/questions', payload)
+export const uploadQuestionsCsv = (formData) => api.post('/admin/questions/csv', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 export const updateUserRole = (userId, role) => api.put(`/admin/users/${userId}/role`, { role })
 
 // Test engine
@@ -28,5 +29,17 @@ export const submitAnswer = (payload) => api.post('/test/submit', payload)
 export const myResults = () => api.get('/data/my-results')
 export const batchAnalytics = () => api.get('/data/batch-analytics')
 export const myTopicAverages = () => api.get('/data/my-topic-averages')
+export const studentStats = () => api.get('/data/student-stats')
+
+// Learning topics (student)
+export const fetchTopics = () => api.get('/learn/topics')
+export const fetchTopic = (id) => api.get(`/learn/topics/${id}`)
+export const fetchTopicQuestions = (id) => api.get(`/learn/topics/${id}/questions`)
+
+// Admin topics CRUD
+export const adminListTopics = () => api.get('/admin/topics')
+export const adminCreateTopic = (payload) => api.post('/admin/topics', payload)
+export const adminUpdateTopic = (id, payload) => api.put(`/admin/topics/${id}`, payload)
+export const adminDeleteTopic = (id) => api.delete(`/admin/topics/${id}`)
 
 

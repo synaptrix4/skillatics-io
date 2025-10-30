@@ -54,11 +54,13 @@ def create_app() -> Flask:
     from routes.admin import admin_bp
     from routes.test_engine import test_bp
     from routes.data import data_bp
+    from routes.topics import topics_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(admin_bp, url_prefix="/api/admin")
     app.register_blueprint(test_bp, url_prefix="/api/test")
     app.register_blueprint(data_bp, url_prefix="/api/data")
+    app.register_blueprint(topics_bp, url_prefix="/api/learn")
 
     # --- Health Check Route ---
     @app.get("/api/health")
