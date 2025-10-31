@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Target, BarChart3, Users, Check, Menu, X, Rocket, Shield, Zap } from 'lucide-react';
+import { GraduationCap, BarChart3, Users, Check, Menu, X, Rocket, Shield, Zap, Target } from 'lucide-react';
 
 // Main App Component (Renamed from LandingPage for convention)
 export default function App() {
@@ -32,8 +32,8 @@ function Header() {
     >
       <nav className="container mx-auto flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
-            <Target className="h-5 w-5 text-white" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 shadow-sm">
+            <GraduationCap className="h-5 w-5 text-white" />
           </div>
           <span className="text-xl font-bold text-gray-900">Skillatics</span>
         </div>
@@ -439,8 +439,8 @@ function Footer() {
       <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between sm:flex-row">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
-              <Target className="h-5 w-5 text-white" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 shadow-sm">
+              <GraduationCap className="h-5 w-5 text-white" />
             </div>
             <span className="text-xl font-bold text-gray-900">Skillatics</span>
           </div>

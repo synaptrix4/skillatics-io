@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
 from bson import ObjectId
 from extensions import mongo
+from datetime import datetime
 
 
 admin_bp = Blueprint("admin", __name__)
@@ -233,14 +234,40 @@ def update_user_role(user_id: str):
 
     data = request.get_json(force=True)
     new_role = (data.get("role") or "").strip()
-    if new_role not in ["Student", "TPO/Faculty", "Admin"]:
-        return jsonify({"error": "Invalid role"}), 400
+    
+    # Debug logging
+    print(f"[DEBUG] Received role change request: role='{new_role}', type={type(new_role)}")
+    
+    if new_role not in ["Student", "Faculty", "TPO", "Admin"]:
+        print(f"[DEBUG] Role validation failed. Received: '{new_role}'")
+        return jsonify({"error": f"Invalid role: '{new_role}'"}), 400
 
     try:
         res = mongo.db.users.update_one({"_id": ObjectId(user_id)}, {"$set": {"role": new_role}})
-    except Exception:
+    except Exception as e:
+        print(f"[DEBUG] Database error: {e}")
         return jsonify({"error": "Bad user id"}), 400
 
+    if res.matched_count == 0:
+        return jsonify({"error": "User not found"}), 404
+    return jsonify({"ok": True})
+
+
+# Update user department (admin only)
+@admin_bp.put("/users/<user_id>/department")
+@jwt_required()
+def update_user_department(user_id: str):
+    if not is_admin():
+        return jsonify({"error": "Forbidden"}), 403
+
+    data = request.get_json(force=True)
+    dept = (data.get("department") or "").strip()
+    if not dept:
+        return jsonify({"error": "Department required"}), 400
+    try:
+        res = mongo.db.users.update_one({"_id": ObjectId(user_id)}, {"$set": {"department": dept, "updatedAt": datetime.utcnow()}})
+    except Exception:
+        return jsonify({"error": "Bad user id"}), 400
     if res.matched_count == 0:
         return jsonify({"error": "User not found"}), 404
     return jsonify({"ok": True})

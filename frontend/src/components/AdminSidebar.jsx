@@ -1,19 +1,17 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, BookOpen, Code2, FlaskConical, BarChart3, User, GraduationCap } from "lucide-react";
+import { LayoutDashboard, Users, BookOpen, FileQuestion, Shield } from "lucide-react";
 
-export default function StudentSidebar() {
+export default function AdminSidebar() {
   const location = useLocation();
   function isActive(path) {
     return location.pathname === path || location.pathname.startsWith(path + "/");
   }
   
   const navItems = [
-    { to: "/student", text: "Dashboard", icon: LayoutDashboard, exact: true },
-    { to: "/student/general", text: "General Aptitude", icon: BookOpen },
-    { to: "/student/technical", text: "Technical Aptitude", icon: Code2 },
-    { to: "/test", text: "Adaptive Test", icon: FlaskConical },
-    { to: "/analytics", text: "Analytics", icon: BarChart3 },
-    { to: "/student/profile", text: "My Profile", icon: User },
+    { to: "/admin", text: "Dashboard", icon: LayoutDashboard, exact: true },
+    { to: "/admin/manage-users", text: "Users", icon: Users },
+    { to: "/admin/topics", text: "Topics", icon: BookOpen },
+    { to: "/admin/questions", text: "Questions", icon: FileQuestion },
   ];
   
   return (
@@ -21,11 +19,11 @@ export default function StudentSidebar() {
       <div className="p-6 border-b">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
-            <GraduationCap className="h-6 w-6 text-white" />
+            <Shield className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Skillatics</h2>
-            <p className="text-xs text-gray-500">Student Portal</p>
+            <h2 className="text-lg font-bold text-gray-900">Admin Panel</h2>
+            <p className="text-xs text-gray-500">Skillatics</p>
           </div>
         </div>
       </div>
@@ -43,9 +41,9 @@ export default function StudentSidebar() {
         </ul>
       </nav>
       <div className="border-t p-4">
-        <div className="rounded-lg bg-gradient-to-br from-indigo-50 to-violet-50 p-3">
-          <p className="text-xs font-medium text-indigo-900">Keep Learning!</p>
-          <p className="mt-1 text-xs text-indigo-700">Track your progress daily</p>
+        <div className="rounded-lg bg-indigo-50 p-3">
+          <p className="text-xs font-medium text-indigo-900">Need Help?</p>
+          <p className="mt-1 text-xs text-indigo-700">Check the documentation</p>
         </div>
       </div>
     </aside>
@@ -69,3 +67,7 @@ function SidebarLink({ to, text, icon: Icon, active }) {
     </li>
   );
 }
+
+
+
+

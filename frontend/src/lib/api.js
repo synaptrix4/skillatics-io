@@ -15,6 +15,7 @@ api.interceptors.request.use((config) => {
 export const requestOtp = (payload) => api.post('/auth/request-otp', payload)
 export const verifyOtp = (payload) => api.post('/auth/verify-otp', payload)
 export const updateProfile = (payload) => api.post('/auth/update-profile', payload)
+export const refreshToken = () => api.post('/auth/refresh-token')
 
 // Auth
 export const register = (payload) => api.post('/auth/register', payload)
@@ -25,6 +26,7 @@ export const listUsers = () => api.get('/admin/users')
 export const addQuestion = (payload) => api.post('/admin/questions', payload)
 export const uploadQuestionsCsv = (formData) => api.post('/admin/questions/csv', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 export const updateUserRole = (userId, role) => api.put(`/admin/users/${userId}/role`, { role })
+export const updateUserDepartment = (userId, department) => api.put(`/admin/users/${userId}/department`, { department })
 
 // Test engine
 export const startTest = (payload) => api.post('/test/start', payload)
@@ -32,9 +34,9 @@ export const submitAnswer = (payload) => api.post('/test/submit', payload)
 
 // Data
 export const myResults = () => api.get('/data/my-results')
-export const batchAnalytics = () => api.get('/data/batch-analytics')
+export const batchAnalytics = (query = '') => api.get(`/data/batch-analytics${query ? `?${query}` : ''}`)
 export const myTopicAverages = () => api.get('/data/my-topic-averages')
-export const studentStats = () => api.get('/data/student-stats')
+export const studentStats = (query = '') => api.get(`/data/student-stats${query ? `?${query}` : ''}`)
 
 // Learning topics (student)
 export const fetchTopics = () => api.get('/learn/topics')

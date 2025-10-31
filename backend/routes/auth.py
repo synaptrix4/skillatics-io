@@ -40,8 +40,8 @@ def hash_otp(otp: str):
     return hashlib.sha256(otp.encode('utf-8')).hexdigest()
 
 def is_profile_complete(user):
-    # Require name, mobile, gender, department
-    return all(user.get(k) for k in ["name", "mobile", "gender", "department"])
+    # Require name, mobile, gender, department, division, rollNo
+    return all(user.get(k) for k in ["name", "mobile", "gender", "department", "division", "rollNo"])
 
 # --- REQUEST OTP ---
 @auth_bp.post("/request-otp")
@@ -134,7 +134,7 @@ def verify_otp():
 def update_profile():
     uid = get_jwt_identity()
     data = request.get_json(force=True)
-    allowed = ["name", "mobile", "gender", "department"]
+    allowed = ["name", "mobile", "gender", "department", "division", "rollNo"]
     updates = {k: data[k].strip() if isinstance(data[k], str) else data[k] for k in allowed if k in data}
     if not updates:
         return jsonify({"error": "No profile fields provided"}), 400
@@ -145,6 +145,37 @@ def update_profile():
         "ok": True,
         "user": {"_id": str(user["_id"]), "email": user["email"], "name": user.get("name", ""), "role": user.get("role"),
                   "profile_complete": profile_complete}
+    })
+
+
+# --- Refresh Token (to get updated role) ---
+@auth_bp.post("/refresh-token")
+@jwt_required()
+def refresh_token():
+    """
+    Refresh the user's JWT token with their current role from the database.
+    This is useful when an admin changes a user's role.
+    """
+    uid = get_jwt_identity()
+    user = mongo.db.users.find_one({"_id": ObjectId(uid)})
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    role = user.get("role", "Student")
+    profile_complete = is_profile_complete(user)
+    
+    # Create new token with updated role
+    access_token = create_access_token(identity=str(user["_id"]), additional_claims={"role": role})
+    
+    return jsonify({
+        "token": access_token,
+        "user": {
+            "_id": str(user["_id"]),
+            "email": user["email"],
+            "name": user.get("name", ""),
+            "role": role,
+            "profile_complete": profile_complete
+        }
     })
 
 

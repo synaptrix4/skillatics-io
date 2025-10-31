@@ -1,4 +1,4 @@
-import { Target } from 'lucide-react'
+import { GraduationCap } from 'lucide-react'
 
 export default function Brand({ withText = true, size = 'md' }) {
   const sizeMap = {
@@ -9,8 +9,8 @@ export default function Brand({ withText = true, size = 'md' }) {
   const s = sizeMap[size] || sizeMap.md
   return (
     <div className="inline-flex items-center gap-2">
-      <div className={`flex ${s.box} items-center justify-center rounded-lg bg-indigo-600`}>
-        <Target className={`${s.icon} text-white`} />
+      <div className={`flex ${s.box} items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 shadow-sm`}>
+        <GraduationCap className={`${s.icon} text-white`} />
       </div>
       {withText && <span className={`${s.text} font-bold text-gray-900`}>Skillatics</span>}
     </div>

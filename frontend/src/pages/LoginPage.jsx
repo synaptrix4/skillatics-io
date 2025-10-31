@@ -30,13 +30,9 @@ export default function LoginPage() {
         try {
             const resp = await verifyOtp({ email: form.email, otp })
             saveAuth(resp.data.token, resp.data.user)
-            if (!resp.data.user.profile_complete) {
-                navigate('/complete-profile')
-            } else {
-                const role = resp.data.user?.role || 'Student'
-                const redirect = role === 'Admin' ? '/admin' : role === 'TPO/Faculty' ? '/faculty' : '/student'
-                window.location.href = redirect
-            }
+            const role = resp.data.user?.role || 'Student'
+            const redirect = role === 'Admin' ? '/admin' : (role === 'TPO' || role === 'Faculty') ? '/faculty' : '/student'
+            window.location.href = redirect
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to verify OTP')
         } finally {
