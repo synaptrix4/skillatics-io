@@ -9,4 +9,8 @@ numpy
 pandas
 scikit-learn==1.5.2
 bcrypt==4.0.1
+<<<<<<< HEAD
 gunicorn==21.2.0
+=======
+gunicorn
+>>>>>>> 672633363b64b0d9c3934ecfbc42e79a8e57f9ec
