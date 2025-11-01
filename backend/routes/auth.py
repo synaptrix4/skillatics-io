@@ -4,12 +4,114 @@ import hashlib
 import os
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from extensions import mongo
 from bson import ObjectId
 
 auth_bp = Blueprint("auth", __name__)
+
+def get_otp_email_template(otp):
+    """Generate a professional HTML email template for OTP"""
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your OTP Code</title>
+    <style>
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+        }}
+        .container {{
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }}
+        .card {{
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 40px;
+            text-align: center;
+        }}
+        .brand {{
+            font-size: 28px;
+            font-weight: 700;
+            color: #4A5568;
+            margin-bottom: 10px;
+        }}
+        .brand-icon {{
+            font-size: 32px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }}
+        .title {{
+            font-size: 22px;
+            font-weight: 600;
+            color: #2D3748;
+            margin-bottom: 15px;
+        }}
+        .text {{
+            font-size: 16px;
+            line-height: 1.6;
+            color: #4A5568;
+            margin-bottom: 25px;
+        }}
+        .otp-code {{
+            font-size: 42px;
+            font-weight: 700;
+            color: #2D3748;
+            letter-spacing: 8px;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #EDF2F7;
+            border-radius: 8px;
+            display: inline-block;
+        }}
+        .footer-text {{
+            font-size: 14px;
+            color: #718096;
+            line-height: 1.5;
+            margin-top: 20px;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="brand">
+                <span class="brand-icon">🎓</span>Skillatics
+            </div>
+            <h2 class="title">Your Verification Code</h2>
+            <p class="text">
+                Please use the following one-time password (OTP) to complete your request.
+            </p>
+            
+            <div class="otp-code">
+                {otp}
+            </div>
+            
+            <p class="text" style="font-weight: 600; color: #E53E3E;">
+                This code is valid for 5 minutes.
+            </p>
+            
+            <p class="footer-text">
+                If you did not request this code, you can safely ignore this email.
+            </p>
+        </div>
+        <p style="text-align: center; color: #A0AEC0; font-size: 12px; margin-top: 20px;">
+            &copy; 2025 Skillatics. All rights reserved.
+        </p>
+    </div>
+</body>
+</html>"""
 
 def send_otp_email(to, otp):
     smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
@@ -19,11 +121,31 @@ def send_otp_email(to, otp):
     if not smtp_user or not smtp_pass:
         print(f"[Skillatics-Warning] SMTP credentials not configured. OTP: {otp} (for development only)")
         return
-    body = f"Your Skillatics OTP is: {otp}\n\nThis code is valid for 5 minutes."
-    msg = MIMEText(body)
+    
+    # Create message with both HTML and plain text versions
+    msg = MIMEMultipart('alternative')
     msg['Subject'] = "Your OTP for Skillatics"
     msg['From'] = smtp_user
     msg['To'] = to
+    
+    # Plain text version (fallback)
+    text_body = f"""Your Skillatics OTP is: {otp}
+
+This code is valid for 5 minutes.
+
+If you didn't request this code, please ignore this email.
+
+© 2024 Skillatics. All rights reserved."""
+    
+    # HTML version
+    html_body = get_otp_email_template(otp)
+    
+    # Attach both versions
+    part1 = MIMEText(text_body, 'plain')
+    part2 = MIMEText(html_body, 'html')
+    msg.attach(part1)
+    msg.attach(part2)
+    
     try:
         with smtplib.SMTP_SSL(smtp_server, smtp_port) as smtp:
             smtp.login(smtp_user, smtp_pass)
