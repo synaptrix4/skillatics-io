@@ -17,7 +17,7 @@ def send_otp_email(to, otp):
     smtp_user = os.getenv("SMTP_USER")
     smtp_pass = os.getenv("SMTP_PASS")
     if not smtp_user or not smtp_pass:
-        # Optionally log missing config but no demo OTP print
+        print(f"[Skillatics-Warning] SMTP credentials not configured. OTP: {otp} (for development only)")
         return
     body = f"Your Skillatics OTP is: {otp}\n\nThis code is valid for 5 minutes."
     msg = MIMEText(body)
@@ -28,9 +28,10 @@ def send_otp_email(to, otp):
         with smtplib.SMTP_SSL(smtp_server, smtp_port) as smtp:
             smtp.login(smtp_user, smtp_pass)
             smtp.sendmail(smtp_user, [to], msg.as_string())
-        # Optionally log success
+        print(f"[Skillatics-Success] OTP email sent to {to}")
     except Exception as e:
-        print(f"[Skillatics-Error] Failed to send OTP email: {e}")
+        print(f"[Skillatics-Error] Failed to send OTP email to {to}: {e}")
+        raise
 
 # --- Helpers for OTP ---
 def random_otp():

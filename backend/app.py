@@ -14,7 +14,18 @@ def create_app() -> Flask:
     """
     load_dotenv()
     app = Flask(__name__)
-    CORS(app)
+    
+    # --- CORS Configuration ---
+    # Allow frontend origin from environment variable
+    frontend_url = os.getenv("FRONTEND_URL", "*")
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": frontend_url,
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"],
+            "supports_credentials": True
+        }
+    })
 
     # --- Database Configuration ---
     # Ensure Mongo URI always includes a database name for clarity

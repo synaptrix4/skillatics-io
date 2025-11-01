@@ -5,7 +5,7 @@ services:
     runtime: python
     plan: free
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: cd backend && gunicorn "app:create_app()"
+    startCommand: cd backend && gunicorn -c gunicorn_config.py "app:create_app()"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -23,17 +23,22 @@ services:
         sync: false
       - key: SMTP_PASS
         sync: false
+      - key: FRONTEND_URL
+        value: https://skillatics-frontend.onrender.com
     healthCheckPath: /api/health
 
   # Frontend Static Site
   - type: web
     name: skillatics-frontend
     runtime: static
+    plan: free
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: ./frontend/dist
     envVars:
       - key: NODE_VERSION
         value: 18
+      - key: VITE_API_URL
+        value: https://skillatics-backend.onrender.com/api
     routes:
       - type: rewrite
         source: /*
