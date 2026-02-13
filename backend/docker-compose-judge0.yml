@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  judge0-server:
+    image: judge0/judge0:1.13.0
+    ports:
+      - "2358:2358"
+    privileged: true
+    restart: always
+    environment:
+      - REDIS_HOST=judge0-redis
+      - REDIS_PORT=6379
+      - POSTGRES_HOST=judge0-db
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=Judge0Pass2024
+      - ENABLE_WAIT_RESULT=true
+    depends_on:
+      - judge0-db
+      - judge0-redis
+
+  judge0-workers:
+    image: judge0/judge0:1.13.0
+    command: ["./scripts/workers"]
+    privileged: true
+    restart: always
+    environment:
+      - REDIS_HOST=judge0-redis
+      - REDIS_PORT=6379
+      - POSTGRES_HOST=judge0-db
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=Judge0Pass2024
+    depends_on:
+      - judge0-db
+      - judge0-redis
+
+  judge0-db:
+    image: postgres:13.0
+    restart: always
+    environment:
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=Judge0Pass2024
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+
+  judge0-redis:
+    image: redis:6.0
+    command: redis-server --appendonly yes
+    restart: always
+    volumes:
+      - redis-data:/data
+
+volumes:
+  postgres-data:
+  redis-data:
