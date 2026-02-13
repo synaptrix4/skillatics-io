@@ -306,7 +306,7 @@ MIT License - See LICENSE file for details
 
 **Skillatics** - Building the future of adaptive learning
 
-For questions or support: `anish@skillatics.io`
+For questions or support: `synaptrix4@gmail.com`
 
 ---
 
