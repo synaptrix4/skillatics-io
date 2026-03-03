@@ -1,0 +1,34 @@
+services:
+  # Backend Flask API connected to MongoDB
+  - type: web
+    name: skillatics-backend
+    env: python
+    region: oregon 
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && gunicorn 'app:create_app()'"
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false # You must set this in the Render Dashboard securely!
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false # You must set this in the Render Dashboard securely!
+      - key: RESEND_API_KEY
+        sync: false # You must set this in the Render Dashboard securely!
+      # We dynamically pull the FRONTEND_URL based on the static service below
+      - key: FRONTEND_URL
+        value: "https://skillatics-frontend.onrender.com" 
+
+  # Frontend React App (Vite)
+  - type: web
+    name: skillatics-frontend
+    env: static
+    region: oregon
+    buildCommand: "cd frontend && npm install && npm run build"
+    staticPublishPath: frontend/dist
+    # VITE_API_URL dynamically connects back to the Flask Web Service below
+    envVars:
+      - key: VITE_API_URL
+        value: ${{skillatics-backend.url}}/api

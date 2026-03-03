@@ -2,3 +2,18 @@ DEOLOYMENT.md
 README.md
 TESTING_GUIDE.md
 WEEK1_SETUP.md
+
+# Testing & Scripts
+test_code_quest_payload.py
+test_exec.py
+backend/tests/
+frontend/tests/
+cypress/
+
+# Judge0 Execution Data
+judge0/
+data/
+backend/temp_execution/
+*.pyc
+__pycache__/
+.agent

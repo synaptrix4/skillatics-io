@@ -2,9 +2,7 @@ from datetime import datetime, timedelta
 import random
 import hashlib
 import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import resend
 import socket
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -13,18 +11,16 @@ from bson import ObjectId
 
 auth_bp = Blueprint("auth", __name__)
 
-# --- START: SMTP Email Logic ---
+# --- START: Resend Email Logic ---
 def send_otp_email(to, otp):
-    smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-    smtp_port = int(os.getenv("SMTP_PORT", 587))
-    smtp_username = os.getenv("SMTP_USERNAME")
-    smtp_password = os.getenv("SMTP_PASSWORD")
+    resend_api_key = os.getenv("RESEND_API_KEY")
 
-    if not smtp_username or not smtp_password:
-        print(f"[Skillatics-Warning] SMTP_USERNAME or SMTP_PASSWORD not configured. OTP: {otp} (for development only)")
+    if not resend_api_key:
+        print(f"[Skillatics-Warning] RESEND_API_KEY not configured. OTP: {otp} (for development only)")
         # If we are in dev mode, we might want to just return, the caller handles logging the OTP
         return
 
+    resend.api_key = resend_api_key
     subject = "Your OTP for Skillatics"
     
     html_content = f"""
@@ -64,27 +60,19 @@ def send_otp_email(to, otp):
     </html>
     """
 
-    msg = MIMEMultipart()
-    msg['From'] = f"Skillatics <{smtp_username}>"
-    msg['To'] = to
-    msg['Subject'] = subject
-
-    msg.attach(MIMEText(html_content, 'html'))
-
     try:
-        # Connect to server
-        server = smtplib.SMTP(smtp_server, smtp_port)
-        server.ehlo()
-        server.starttls() # Secure the connection
-        server.ehlo()
-        server.login(smtp_username, smtp_password)
-        server.sendmail(smtp_username, to, msg.as_string())
-        server.close()
-        print(f"[Skillatics-Success] OTP email sent to {to} via SMTP")
+        params = {
+            "from": "Skillatics <onboarding@resend.dev>",
+            "to": to,
+            "subject": subject,
+            "html": html_content,
+        }
+        resend.Emails.send(params)
+        print(f"[Skillatics-Success] OTP email sent to {to} via Resend")
     except Exception as e:
-        print(f"[Skillatics-Error] Failed to send SMTP email: {e}")
+        print(f"[Skillatics-Error] Failed to send Resend email: {e}")
         raise e
-# --- END: SMTP Email Logic ---
+# --- END: Resend Email Logic ---
 
 # --- Helpers for OTP ---
 def random_otp():
@@ -146,7 +134,7 @@ def request_otp():
     })
     
     # --- START OF UPDATED CODE ---
-    # Send OTP via SMTP email (or print if config missing)
+    # Send OTP via Resend email (or print if config missing)
     otp_sent = False
     try:
         send_otp_email(email, otp)
