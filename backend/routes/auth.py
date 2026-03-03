@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 import random
 import hashlib
 import os
-import resend
-import socket
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from extensions import mongo
@@ -11,18 +11,19 @@ from bson import ObjectId
 
 auth_bp = Blueprint("auth", __name__)
 
-# --- START: Resend Email Logic ---
+# --- START: Brevo API Email Logic ---
 def send_otp_email(to, otp):
-    resend_api_key = os.getenv("RESEND_API_KEY")
-
-    if not resend_api_key:
-        print(f"[Skillatics-Warning] RESEND_API_KEY not configured. OTP: {otp} (for development only)")
-        # If we are in dev mode, we might want to just return, the caller handles logging the OTP
+    api_key = os.environ.get("BREVO_API_KEY")
+    if not api_key:
+        print(f"[Skillatics-Warning] BREVO_API_KEY not configured. OTP: {otp} (for development only)")
         return
 
-    resend.api_key = resend_api_key
+    # Configure Brevo API
+    configuration = sib_api_v3_sdk.Configuration()
+    configuration.api_key['api-key'] = api_key
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+
     subject = "Your OTP for Skillatics"
-    
     html_content = f"""
     <html>
     <head>
@@ -30,7 +31,7 @@ def send_otp_email(to, otp):
             body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }}
             .container {{ width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff; }}
             .header {{ text-align: center; padding-bottom: 20px; border-bottom: 1px solid #edf2f7; margin-bottom: 20px; }}
-            .brand {{ font-size: 24px; font-weight: 700; color: #7c3aed; text-decoration: none; }}
+            .brand {{ font-size: 24px; font-weight: 700; color: #7c3aed; }}
             .otp-box {{ background: linear-gradient(to right, #f5f3ff, #ede9fe); border-radius: 8px; padding: 20px; text-align: center; margin: 24px 0; }}
             .otp-code {{ font-size: 32px; font-weight: 800; color: #5b21b6; letter-spacing: 6px; font-family: monospace; }}
             .expiry {{ font-size: 14px; color: #ef4444; font-weight: 500; margin-top: 8px; }}
@@ -39,40 +40,35 @@ def send_otp_email(to, otp):
     </head>
     <body>
         <div class="container">
-            <div class="header">
-                <span class="brand">Skillatics</span>
-            </div>
+            <div class="header"><span class="brand">Skillatics</span></div>
             <p style="font-size: 16px;">Hello,</p>
             <p>You requested a One-Time Password (OTP) to sign in to your account.</p>
-            
             <div class="otp-box">
                 <div class="otp-code">{otp}</div>
                 <div class="expiry">Valid for 5 minutes</div>
             </div>
-            
             <p>If you didn't request this, you can safely ignore this email.</p>
-            
-            <div class="footer">
-                &copy; {datetime.now().year} Skillatics Learning Platform
-            </div>
+            <div class="footer">&copy; {datetime.now().year} Skillatics Learning Platform</div>
         </div>
     </body>
     </html>
     """
 
+    # Create Transactional Email object
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+        to=[{"email": to}],
+        html_content=html_content,
+        subject=subject,
+        sender={"name": "Skillatics", "email": "synaptrix4@gmail.com"}
+    )
+
     try:
-        params = {
-            "from": "Skillatics <onboarding@resend.dev>",
-            "to": to,
-            "subject": subject,
-            "html": html_content,
-        }
-        resend.Emails.send(params)
-        print(f"[Skillatics-Success] OTP email sent to {to} via Resend")
-    except Exception as e:
-        print(f"[Skillatics-Error] Failed to send Resend email: {e}")
+        api_instance.send_transac_email(send_smtp_email)
+        print(f"[Skillatics-Success] OTP email sent to {to} via Brevo API")
+    except ApiException as e:
+        print(f"[Skillatics-Error] Failed to send email via Brevo API: {e}")
         raise e
-# --- END: Resend Email Logic ---
+# --- END: Brevo API Email Logic ---
 
 # --- Helpers for OTP ---
 def random_otp():
@@ -134,27 +130,24 @@ def request_otp():
     })
     
     # --- START OF UPDATED CODE ---
-    # Send OTP via Resend email (or print if config missing)
-    otp_sent = False
+    is_dev = os.getenv("FLASK_ENV") == "development"
+
+    # Send OTP via SendGrid SMTP relay
+    email_sent = False
     try:
         send_otp_email(email, otp)
-        otp_sent = True
+        email_sent = True
     except Exception as e:
-        # Catch the exception from send_otp_email
-        print(f"[Skillatics-Error] Route /request-otp failed: {e}")
-        # Only return 500 if not in dev mode
-        if os.getenv("FLASK_ENV") != "development":
-             return jsonify({
-                "error": "Failed to send OTP. Check backend logs for details."
-            }), 500
+        print(f"[Skillatics-Error] Route /request-otp email failed: {e}")
+        if not is_dev:
+            return jsonify({"error": "Failed to send OTP email. Please try again later."}), 500
 
     response = {"ok": True, "message": "OTP sent"}
-    
-    # In Development Mode, inject the OTP into the response to avoid blockage
-    if os.getenv("FLASK_ENV") == "development":
+
+    if is_dev:
         response["dev_otp"] = otp
-        response["message"] = f"OTP sent (Dev Mode: {otp})"
-    
+        response["message"] = f"OTP {'emailed and' if email_sent else '(email skipped, dev mode)'}: {otp}"
+
     return jsonify(response)
     # --- END OF UPDATED CODE ---
 

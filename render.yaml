@@ -15,8 +15,8 @@ services:
         generateValue: true
       - key: GEMINI_API_KEY
         sync: false # You must set this in the Render Dashboard securely!
-      - key: RESEND_API_KEY
-        sync: false # You must set this in the Render Dashboard securely!
+      - key: BREVO_API_KEY
+        sync: false # Your Brevo API Key (v3)
       # We dynamically pull the FRONTEND_URL based on the static service below
       - key: FRONTEND_URL
         value: "https://skillatics-frontend.onrender.com" 

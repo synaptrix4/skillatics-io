@@ -10,7 +10,8 @@ pandas
 scikit-learn==1.5.2
 bcrypt==4.0.1
 gunicorn==21.2.0
-resend==2.1.0
+# smtplib is built into Python — no extra dependency needed for SendGrid SMTP relay
 
 
+sib-api-v3-sdk
 google-generativeai
