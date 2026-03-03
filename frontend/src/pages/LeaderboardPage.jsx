@@ -61,7 +61,7 @@ export default function LeaderboardPage() {
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center gap-4 mb-4">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 shadow-lg">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-600 shadow-lg">
                             <Trophy className="h-8 w-8 text-white" />
                         </div>
                         <div>
@@ -75,8 +75,8 @@ export default function LeaderboardPage() {
                         <button
                             onClick={() => setTimeframe('all')}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${timeframe === 'all'
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                                ? 'bg-indigo-600 text-white'
+                                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                                 }`}
                         >
                             All Time
@@ -84,8 +84,8 @@ export default function LeaderboardPage() {
                         <button
                             onClick={() => setTimeframe('monthly')}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${timeframe === 'monthly'
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                                ? 'bg-indigo-600 text-white'
+                                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                                 }`}
                         >
                             This Month
@@ -93,8 +93,8 @@ export default function LeaderboardPage() {
                         <button
                             onClick={() => setTimeframe('weekly')}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${timeframe === 'weekly'
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                                ? 'bg-indigo-600 text-white'
+                                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                                 }`}
                         >
                             This Week
@@ -104,7 +104,7 @@ export default function LeaderboardPage() {
 
                 {/* User's Rank Card */}
                 {userEntry && (
-                    <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border-2 border-indigo-300">
+                    <div className="mb-6 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border-2 border-orange-200">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-white font-bold">
@@ -164,7 +164,7 @@ export default function LeaderboardPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center gap-3">
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-semibold shadow-sm">
+                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-600 text-white font-semibold shadow-sm">
                                                     {entry.name.charAt(0).toUpperCase()}
                                                 </div>
                                                 <div>

@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { requestOtp, verifyOtp } from '../lib/api'
 import { saveAuth } from '../lib/auth'
-import Brand from '../components/Brand'
+import Logo from '../components/Logo'
 import { Loader2, ArrowRight } from 'lucide-react'
 
 export default function LoginPage() {
@@ -45,124 +45,221 @@ export default function LoginPage() {
         nextStep()
     }
 
+    // Animation variants
+    const cardVariants = {
+        hidden: { opacity: 0, y: 30, scale: 0.95 },
+        visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+        exit: { opacity: 0, scale: 0.95, transition: { duration: 0.4 } }
+    };
+
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 15 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+    };
+
     return (
-        <div className="flex min-h-screen items-center justify-center bg-white lg:grid lg:grid-cols-2 lg:bg-transparent">
-            {/* Left Side - Hero / Visuals */}
-            <div className="relative hidden h-full flex-col justify-between bg-zinc-900 p-12 text-white lg:flex">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40"></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-primary-900/90 to-zinc-900/50"></div>
+        <div className="relative min-h-screen flex items-center justify-center font-sans selection:bg-orange-500/30 selection:text-orange-900 overflow-hidden">
+            <AmbientBackground />
+            <AuthNavbar />
 
-                <div className="relative z-10 flex items-center gap-2">
-                    <Brand className="text-white" size="lg" />
-                </div>
+            <main className="relative z-10 w-full max-w-md px-4 sm:px-6 mt-16">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={step}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        variants={cardVariants}
+                        className="bg-white/70 backdrop-blur-2xl border border-white/40 shadow-2xl shadow-slate-200/50 rounded-[2rem] p-8 sm:p-10"
+                    >
+                        <motion.div variants={containerVariants} className="flex flex-col items-center text-center space-y-8">
 
-                <div className="relative z-10 max-w-lg">
-                    <blockquote className="space-y-2">
-                        <p className="text-lg font-medium leading-relaxed">
-                            &ldquo;Skillatics has transformed how our students prepare for their careers. The adaptive tests pinpoint exactly where they need to focus.&rdquo;
-                        </p>
-                        <footer className="text-sm font-medium text-gray-300">
-                            Dr. Emily Chen, Dean of Engineering
-                        </footer>
-                    </blockquote>
-                </div>
-            </div>
+                            {/* Header Section */}
+                            <motion.div variants={itemVariants} className="space-y-3">
+                                <h1 className="text-3xl font-bold tracking-tight text-slate-900">Welcome Back</h1>
+                                <p className="text-slate-500 font-medium">
+                                    Sign in to continue your learning
+                                </p>
+                            </motion.div>
 
-            {/* Right Side - Form */}
-            <div className="flex h-full w-full flex-col items-center justify-center p-8 lg:p-24">
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="w-full max-w-sm space-y-8"
-                >
-                    <div className="space-y-2 text-center lg:text-left">
-                        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Welcome back</h1>
-                        <p className="text-gray-500">
-                            {step === 1 ? 'Enter your email to sign in to your account' : `Enter the code sent to ${form.email}`}
-                        </p>
-                    </div>
-
-                    <form onSubmit={step === 1 ? handleFirst : handleVerify} className="space-y-6">
-                        {step === 1 && (
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email Service</label>
-                                <input
-                                    type="email"
-                                    placeholder="name@example.com"
-                                    className="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={form.email}
-                                    onChange={e => setForm({ ...form, email: e.target.value })}
-                                    required
-                                    autoFocus
-                                />
-                            </div>
-                        )}
-
-                        {step === 2 && (
-                            <div className="space-y-4">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">One-Time Password</label>
-                                    <input
-                                        type="text"
-                                        pattern="\d{6}"
-                                        maxLength={6}
-                                        placeholder="000000"
-                                        className="flex h-14 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-center text-3xl tracking-widest ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
-                                        value={otp}
-                                        onChange={e => setOtp(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
-                                        required
-                                        autoFocus
-                                    />
-                                    <p className="text-center text-xs text-gray-500">It may take a minute to arrive.</p>
+                            {/* Custom Progress Indicators */}
+                            <motion.div variants={itemVariants} className="flex items-center justify-center gap-3 w-full max-w-[200px] mb-2">
+                                <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-all duration-500 ${step >= 1 ? 'bg-orange-500 text-white shadow-md shadow-orange-500/30' : 'bg-slate-200 text-slate-400'}`}>
+                                    {step > 1 ? '✓' : '1'}
                                 </div>
-                            </div>
-                        )}
-
-                        {error && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                className="rounded-md bg-red-50 p-3 text-sm font-medium text-red-600"
-                            >
-                                {error}
+                                <div className={`h-1 flex-1 rounded-full transition-all duration-500 ${step >= 2 ? 'bg-orange-500' : 'bg-slate-200'}`} />
+                                <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-all duration-500 ${step >= 2 ? 'bg-orange-500 text-white shadow-md shadow-orange-500/30' : 'bg-slate-100 text-slate-400 border border-slate-200'}`}>
+                                    2
+                                </div>
                             </motion.div>
-                        )}
 
-                        {info && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                className="rounded-md bg-green-50 p-3 text-sm font-medium text-green-600"
-                            >
-                                {info}
+                            {/* Form Section */}
+                            <form onSubmit={step === 1 ? handleFirst : handleVerify} className="w-full space-y-6">
+                                {step === 1 && (
+                                    <motion.div variants={itemVariants} className="space-y-3">
+                                        <div className="relative">
+                                            <input
+                                                type="email"
+                                                placeholder="name@example.com"
+                                                className="w-full px-4 py-4 bg-white/60 border border-slate-200 rounded-2xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-300 shadow-sm"
+                                                value={form.email}
+                                                onChange={e => setForm({ ...form, email: e.target.value })}
+                                                required
+                                                autoFocus
+                                            />
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                {step === 2 && (
+                                    <motion.div variants={itemVariants} className="space-y-4">
+                                        <div className="bg-slate-50/80 rounded-2xl p-4 border border-slate-100 mb-6 flex items-center gap-3">
+                                            <div className="text-left flex-1">
+                                                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Code sent to</p>
+                                                <p className="text-sm font-medium text-slate-900 truncate max-w-[200px]">{form.email}</p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setStep(1)}
+                                                className="ml-auto text-xs font-bold text-orange-600 hover:text-orange-700 transition-colors"
+                                            >
+                                                Edit
+                                            </button>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <input
+                                                type="text"
+                                                pattern="\d{6}"
+                                                maxLength={6}
+                                                placeholder="000000"
+                                                className="w-full py-4 text-center text-3xl tracking-[0.5em] font-medium bg-white/80 border border-slate-200 rounded-2xl text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-300 shadow-sm"
+                                                value={otp}
+                                                onChange={e => setOtp(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+                                                required
+                                                autoFocus
+                                            />
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                {/* Error/Info Alerts */}
+                                <AnimatePresence>
+                                    {error && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10, height: 0 }}
+                                            animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            className="rounded-xl bg-red-50/80 border border-red-100 p-4 text-sm font-medium text-red-600 shadow-sm flex items-start gap-3 text-left"
+                                        >
+                                            {error}
+                                        </motion.div>
+                                    )}
+                                    {info && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10, height: 0 }}
+                                            animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            className="rounded-xl bg-green-50/80 border border-green-100 p-4 text-sm font-medium text-green-700 shadow-sm flex items-start gap-3 text-left"
+                                        >
+                                            {info}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                {/* Submit Button */}
+                                <motion.div variants={itemVariants} className="pt-2">
+                                    <button
+                                        type="submit"
+                                        disabled={loading || (step === 2 && otp.length !== 6)}
+                                        className="relative flex w-full items-center justify-center gap-2 rounded-2xl bg-orange-500 py-4 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition-all duration-300 hover:bg-orange-600 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-500/30 disabled:pointer-events-none disabled:opacity-50 cursor-pointer overflow-hidden group"
+                                    >
+                                        <span className="absolute inset-0 bg-gradient-to-r from-orange-400 to-amber-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                                        <span className="relative flex items-center justify-center gap-2">
+                                            {loading ? (
+                                                <Loader2 className="h-5 w-5 animate-spin" />
+                                            ) : (
+                                                <>
+                                                    {step === 1 ? 'Continue with Email' : 'Verify & Login'}
+                                                    {!loading && <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />}
+                                                </>
+                                            )}
+                                        </span>
+                                    </button>
+                                </motion.div>
+                            </form>
+
+                            {/* Footer links */}
+                            <motion.div variants={itemVariants} className="w-full pt-6 border-t border-slate-100 text-center">
+                                <span className="text-slate-500 text-sm">Don't have an account? </span>
+                                <Link to="/register" className="text-sm font-bold text-orange-600 hover:text-orange-700 transition-colors">
+                                    Sign Up Instead
+                                </Link>
                             </motion.div>
-                        )}
 
-                        <button
-                            type="submit"
-                            disabled={loading || (step === 2 && otp.length !== 6)}
-                            className="inline-flex h-11 w-full items-center justify-center rounded-md bg-primary-600 px-8 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                        >
-                            {loading ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <>
-                                    {step === 1 ? 'Sign In with Email' : 'Verify & Login'}
-                                    {!loading && step === 1 && <ArrowRight className="ml-2 h-4 w-4" />}
-                                </>
-                            )}
-                        </button>
-                    </form>
-
-                    <div className="text-center text-sm">
-                        <Link to="/register" className="font-medium text-primary-600 underline-offset-4 hover:underline">
-                            Don't have an account? Sign Up
-                        </Link>
-                    </div>
-                </motion.div>
-            </div>
+                        </motion.div>
+                    </motion.div>
+                </AnimatePresence>
+            </main>
         </div>
     )
 }
 
+// --- AMBIENT GLOW BACKGROUND ---
+function AmbientBackground() {
+    return (
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-slate-50">
+            {/* Top Right Orange Glow */}
+            <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-orange-500/20 blur-[120px]" />
+            {/* Bottom Left Amber Glow */}
+            <div className="absolute bottom-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-amber-400/20 blur-[130px]" />
+            {/* Center soft glow */}
+            <div className="absolute top-[20%] left-[20%] w-[40vw] h-[40vw] rounded-full bg-orange-300/10 blur-[100px]" />
 
+            {/* Noise texture for premium feel */}
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05] mix-blend-overlay"></div>
+        </div>
+    );
+}
+
+// --- FLOATING NAVBAR ---
+function AuthNavbar() {
+    return (
+        <motion.header
+            className="fixed top-0 left-0 w-full z-50 py-6"
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+            <div className="container px-4 mx-auto md:px-6 flex justify-center">
+                <nav className="mx-auto flex items-center justify-between rounded-full bg-white/80 border border-slate-200/60 backdrop-blur-2xl px-6 py-3 shadow-lg shadow-slate-200/40 w-full max-w-4xl">
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center gap-3 group relative z-10 cursor-pointer">
+                        <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-orange-400 to-amber-600 shadow-md shadow-orange-500/20">
+                            <Logo className="h-5 w-auto text-white" />
+                        </div>
+                        <span className="text-xl font-semibold text-slate-900 tracking-tight">Skillatics</span>
+                    </Link>
+
+                    {/* Back to Home CTA */}
+                    <div className="flex items-center">
+                        <Link
+                            to="/"
+                            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-slate-900 px-5 py-2 text-sm font-medium text-white shadow-md transition-all duration-300 hover:bg-slate-800 hover:-translate-y-0.5 cursor-pointer"
+                        >
+                            <span className="relative flex items-center gap-2">
+                                Back to Home
+                                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                            </span>
+                        </Link>
+                    </div>
+                </nav>
+            </div>
+        </motion.header>
+    );
+}

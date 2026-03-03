@@ -10,14 +10,14 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+        sans: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
       },
       colors: {
-        primary: colors.violet,
+        primary: colors.orange,
         gray: colors.slate,
         // Semantic aliases
-        brand: colors.violet,
-        accent: colors.emerald,
+        brand: colors.orange,
+        accent: colors.amber,
       },
       borderRadius: {
         'xl': '0.75rem',
@@ -25,7 +25,7 @@ export default {
       },
       boxShadow: {
         'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',
-        'glow': '0 0 15px rgba(124, 58, 237, 0.3)',
+        'glow': '0 0 15px rgba(249, 115, 22, 0.3)',
       },
     },
   },

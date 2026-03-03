@@ -289,32 +289,38 @@ export default function DebugDungeon() {
     // Victory Screen
     if (gameState === 'victory') {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-green-900 to-emerald-900 text-white p-8 flex items-center justify-center">
+            <div className="min-h-screen bg-slate-50 text-slate-900 p-8 flex items-center justify-center relative overflow-hidden">
+                {/* Decorative background blobs */}
+                <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+                    <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-200/40 blur-3xl"></div>
+                    <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-green-200/40 blur-3xl"></div>
+                </div>
+
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="max-w-md w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 text-center"
+                    className="max-w-md w-full bg-white/80 backdrop-blur-xl border border-gray-200 shadow-xl rounded-3xl p-8 text-center"
                 >
-                    <Trophy className="h-24 w-24 text-yellow-400 mx-auto mb-6" />
-                    <h1 className="text-4xl font-black mb-4">Freedom!</h1>
-                    <p className="text-green-200 mb-6">You've debugged your way out of the dungeon!</p>
+                    <Trophy className="h-24 w-24 text-amber-500 mx-auto mb-6 drop-shadow-sm" />
+                    <h1 className="text-4xl font-black mb-4 text-slate-900">Freedom!</h1>
+                    <p className="text-slate-600 font-medium mb-6">You've debugged your way out of the dungeon!</p>
 
                     <div className="grid grid-cols-2 gap-4 mb-8">
-                        <div className="bg-black/20 rounded-xl p-4">
-                            <CheckCircle2 className="h-6 w-6 mx-auto mb-2 text-green-400" />
-                            <div className="text-2xl font-bold">{completedRooms.length}</div>
-                            <div className="text-xs text-gray-400">Rooms Cleared</div>
+                        <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4">
+                            <CheckCircle2 className="h-6 w-6 mx-auto mb-2 text-emerald-500" />
+                            <div className="text-2xl font-bold text-emerald-700">{completedRooms.length}</div>
+                            <div className="text-xs text-emerald-600/80 font-bold uppercase tracking-wider mt-1">Rooms Cleared</div>
                         </div>
-                        <div className="bg-black/20 rounded-xl p-4">
-                            <Lightbulb className="h-6 w-6 mx-auto mb-2 text-yellow-400" />
-                            <div className="text-2xl font-bold">{hintsUsed}</div>
-                            <div className="text-xs text-gray-400">Hints Used</div>
+                        <div className="bg-amber-50 border border-amber-100 rounded-xl p-4">
+                            <Lightbulb className="h-6 w-6 mx-auto mb-2 text-amber-500" />
+                            <div className="text-2xl font-bold text-amber-700">{hintsUsed}</div>
+                            <div className="text-xs text-amber-600/80 font-bold uppercase tracking-wider mt-1">Hints Used</div>
                         </div>
                     </div>
 
-                    <div className="bg-white/5 rounded-xl p-4 mb-8">
-                        <div className="text-sm text-gray-400 mb-1">Total XP Earned</div>
-                        <div className="text-3xl font-bold text-yellow-400">
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-8">
+                        <div className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Total XP Earned</div>
+                        <div className="text-3xl font-black text-orange-500">
                             {rooms.reduce((sum, room) => sum + room.xp, 0)}
                         </div>
                     </div>
@@ -328,13 +334,13 @@ export default function DebugDungeon() {
                                 setCompletedRooms([]);
                                 setGameState('playing');
                             }}
-                            className="w-full py-3 bg-green-600 hover:bg-green-500 rounded-xl font-bold transition-all"
+                            className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white shadow-md hover:shadow-lg rounded-xl font-bold transition-all hover:-translate-y-1"
                         >
                             Play Again
                         </button>
                         <button
                             onClick={() => navigate('/gamified-assessment')}
-                            className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-all"
+                            className="w-full py-3 bg-white border border-gray-200 text-slate-700 hover:text-orange-500 hover:border-orange-200 shadow-sm hover:shadow-md rounded-xl font-bold transition-all hover:-translate-y-1"
                         >
                             Back to Games
                         </button>
@@ -348,17 +354,23 @@ export default function DebugDungeon() {
     const room = rooms[currentRoom];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-red-900 to-pink-900 text-white p-4 md:p-8">
+        <div className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8 relative overflow-hidden">
+            {/* Decorative background blobs */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-red-200/40 blur-3xl"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-orange-200/40 blur-3xl"></div>
+            </div>
+
             {/* Header */}
             <div className="max-w-6xl mx-auto mb-8">
                 <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-3xl md:text-4xl font-black flex items-center gap-3">
-                        <Bug className="h-8 w-8 text-red-400" />
+                    <h1 className="text-3xl md:text-4xl font-black flex items-center gap-3 text-slate-900">
+                        <Bug className="h-8 w-8 text-rose-500" />
                         Debug Dungeon
                     </h1>
                     <button
                         onClick={() => navigate('/gamified-assessment')}
-                        className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all flex items-center gap-2"
+                        className="px-4 py-2 bg-white border border-gray-200 text-slate-700 hover:text-rose-500 hover:border-rose-200 shadow-sm hover:shadow-md rounded-lg transition-all flex items-center gap-2 font-medium hover:-translate-y-1"
                     >
                         <Home className="h-4 w-4" />
                         Exit
@@ -366,20 +378,20 @@ export default function DebugDungeon() {
                 </div>
 
                 {/* Progress Bar */}
-                <div className="bg-black/20 backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+                <div className="bg-white/80 backdrop-blur-md rounded-2xl p-4 border border-gray-200 shadow-sm">
                     <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-bold">Room {currentRoom + 1} / {rooms.length}</span>
-                        <span className="text-sm text-gray-400">{completedRooms.length} Cleared</span>
+                        <span className="text-sm font-bold text-slate-700 uppercase tracking-wider">Room {currentRoom + 1} / {rooms.length}</span>
+                        <span className="text-sm font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">{completedRooms.length} Cleared</span>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 h-3">
                         {rooms.map((_, idx) => (
                             <div
                                 key={idx}
-                                className={`flex-1 h-2 rounded-full ${completedRooms.includes(idx)
-                                    ? 'bg-green-500'
+                                className={`flex-1 rounded-full transition-colors duration-300 ${completedRooms.includes(idx)
+                                    ? 'bg-emerald-400'
                                     : idx === currentRoom
-                                        ? 'bg-red-500'
-                                        : 'bg-gray-700'
+                                        ? 'bg-rose-500 scale-y-125 shadow-sm'
+                                        : 'bg-slate-200'
                                     }`}
                             />
                         ))}
@@ -395,26 +407,26 @@ export default function DebugDungeon() {
                         key={currentRoom}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20"
+                        className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200 shadow-sm"
                     >
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <div className="text-sm text-red-300 mb-1">Room {room.room}</div>
-                                <h2 className="text-2xl font-black">{room.title}</h2>
+                                <div className="text-sm font-bold text-rose-500 uppercase tracking-wider mb-1">Room {room.room}</div>
+                                <h2 className="text-2xl font-black text-slate-900">{room.title}</h2>
                             </div>
-                            <div className="px-3 py-1 bg-white/10 rounded-full text-xs font-bold">
+                            <div className="px-3 py-1 bg-slate-100 text-slate-600 border border-slate-200 rounded-full text-xs font-bold">
                                 {room.language}
                             </div>
                         </div>
 
-                        <p className="text-gray-200 leading-relaxed mb-6">{room.description}</p>
+                        <p className="text-slate-600 leading-relaxed mb-6 font-medium">{room.description}</p>
 
-                        <div className="bg-red-500/20 border border-red-500/50 rounded-xl p-4 mb-4">
+                        <div className="bg-rose-50 border border-rose-100 rounded-xl p-4 mb-4">
                             <div className="flex items-start gap-2">
-                                <Bug className="h-5 w-5 text-red-300 flex-shrink-0 mt-0.5" />
+                                <Bug className="h-5 w-5 text-rose-500 flex-shrink-0 mt-0.5" />
                                 <div>
-                                    <div className="font-bold text-red-300 text-sm mb-1">Bug Type:</div>
-                                    <div className="text-red-100 text-sm">{room.bug}</div>
+                                    <div className="font-bold text-rose-700 text-sm mb-1 uppercase tracking-wider">Bug Type:</div>
+                                    <div className="text-rose-800 text-sm font-medium">{room.bug}</div>
                                 </div>
                             </div>
                         </div>
@@ -422,14 +434,14 @@ export default function DebugDungeon() {
                         <div className="flex gap-2">
                             <button
                                 onClick={useHint}
-                                className="flex-1 py-3 bg-purple-600 hover:bg-purple-500 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all"
+                                className="flex-1 py-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all hover:-translate-y-1"
                             >
                                 <Lightbulb className="h-5 w-5" />
                                 {showHint ? "Hint Shown" : "Need Hint?"}
                             </button>
                             <button
                                 onClick={resetCode}
-                                className="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-semibold transition-all"
+                                className="px-6 py-3 bg-white border border-gray-200 text-slate-700 hover:text-rose-600 hover:border-rose-200 shadow-sm hover:shadow-md rounded-xl font-semibold transition-all hover:-translate-y-1"
                             >
                                 Reset
                             </button>
@@ -439,13 +451,13 @@ export default function DebugDungeon() {
                             <motion.div
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
-                                className="mt-4 bg-green-500/20 border border-green-500/50 rounded-xl p-4"
+                                className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 shadow-sm"
                             >
-                                <h4 className="font-bold text-green-300 mb-2 flex items-center gap-2">
+                                <h4 className="font-bold text-amber-700 mb-2 flex items-center gap-2">
                                     <Lightbulb className="h-4 w-4" />
                                     Hint:
                                 </h4>
-                                <p className="text-green-100 text-sm">{room.hint}</p>
+                                <p className="text-amber-800 text-sm font-medium">{room.hint}</p>
                             </motion.div>
                         )}
 
@@ -453,47 +465,47 @@ export default function DebugDungeon() {
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className={`mt-4 rounded-xl p-4 ${testOutput.passed
-                                    ? 'bg-green-500/20 border border-green-500/50'
-                                    : 'bg-red-500/20 border border-red-500/50'
+                                className={`mt-4 rounded-xl p-4 border shadow-sm ${testOutput.passed
+                                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                                    : 'bg-rose-50 border-rose-200 text-rose-800'
                                     }`}
                             >
                                 <div className="flex items-center gap-2 mb-2">
                                     {testOutput.passed ? (
-                                        <CheckCircle2 className="h-5 w-5 text-green-400" />
+                                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                                     ) : (
-                                        <XCircle className="h-5 w-5 text-red-400" />
+                                        <XCircle className="h-5 w-5 text-rose-500" />
                                     )}
                                     <span className="font-bold">{testOutput.passed ? 'Success!' : 'Not Fixed Yet'}</span>
                                 </div>
-                                <p className="text-sm">{testOutput.message}</p>
+                                <p className="text-sm font-medium">{testOutput.message}</p>
                             </motion.div>
                         )}
                     </motion.div>
 
                     {/* XP Reward */}
-                    <div className="bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10 text-center">
-                        <div className="text-yellow-400 font-bold text-2xl">+{room.xp} XP</div>
-                        <div className="text-xs text-gray-400 mt-1">Reward for fixing this bug</div>
+                    <div className="bg-white/80 backdrop-blur-md rounded-2xl p-4 border border-gray-200 shadow-sm text-center">
+                        <div className="text-amber-500 font-black text-2xl">+{room.xp} XP</div>
+                        <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Reward for fixing this bug</div>
                     </div>
                 </div>
 
                 {/* Right Panel - Code Editor */}
                 <div className="md:col-span-3">
-                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 h-full">
+                    <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200 shadow-sm h-full flex flex-col">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-xl font-bold flex items-center gap-2">
-                                <Code className="h-5 w-5 text-blue-400" />
+                            <h3 className="text-xl font-bold flex items-center gap-2 text-slate-900">
+                                <Code className="h-5 w-5 text-blue-500" />
                                 Code Editor
                             </h3>
-                            <div className="flex items-center gap-2 text-xs">
+                            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
                                 {completedRooms.includes(currentRoom) ? (
-                                    <span className="flex items-center gap-1 text-green-400">
+                                    <span className="flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
                                         <Unlock className="h-4 w-4" />
                                         Fixed
                                     </span>
                                 ) : (
-                                    <span className="flex items-center gap-1 text-red-400">
+                                    <span className="flex items-center gap-1 text-rose-600 bg-rose-50 px-2 py-1 rounded-md border border-rose-100">
                                         <Lock className="h-4 w-4" />
                                         Locked
                                     </span>
@@ -504,13 +516,13 @@ export default function DebugDungeon() {
                         <textarea
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
-                            className="w-full h-96 bg-gray-900/80 border border-gray-600 rounded-xl p-4 text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-red-500 mb-4 resize-none"
+                            className="w-full flex-1 min-h-[400px] bg-slate-900 border border-slate-700 rounded-xl p-4 text-slate-50 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 mb-4 resize-none shadow-inner"
                             spellCheck="false"
                         />
 
                         <button
                             onClick={checkSolution}
-                            className="w-full py-4 bg-red-600 hover:bg-red-500 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-lg"
+                            className="w-full py-4 bg-rose-500 hover:bg-rose-600 text-white shadow-md hover:shadow-lg rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-lg hover:-translate-y-1"
                         >
                             <PlayCircle className="h-6 w-6" />
                             Test Solution

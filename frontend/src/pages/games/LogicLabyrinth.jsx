@@ -204,39 +204,45 @@ export default function LogicLabyrinth() {
     // Victory Screen
     if (gameState === 'victory') {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-green-900 to-emerald-900 text-white p-8 flex items-center justify-center">
+            <div className="min-h-screen bg-slate-50 text-slate-900 p-8 flex items-center justify-center relative overflow-hidden">
+                {/* Decorative background blobs */}
+                <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+                    <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-200/40 blur-3xl"></div>
+                    <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-green-200/40 blur-3xl"></div>
+                </div>
+
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="max-w-md w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 text-center"
+                    className="max-w-md w-full bg-white/80 backdrop-blur-xl border border-gray-200 shadow-xl rounded-3xl p-8 text-center"
                 >
-                    <Trophy className="h-24 w-24 text-yellow-400 mx-auto mb-6" />
-                    <h1 className="text-4xl font-black mb-4">Freedom!</h1>
-                    <p className="text-green-200 mb-6">You've escaped the Logic Labyrinth!</p>
+                    <Trophy className="h-24 w-24 text-amber-500 mx-auto mb-6 drop-shadow-sm" />
+                    <h1 className="text-4xl font-black mb-4 text-slate-900">Freedom!</h1>
+                    <p className="text-slate-600 font-medium mb-6">You've escaped the Logic Labyrinth!</p>
 
                     <div className="grid grid-cols-2 gap-4 mb-8">
-                        <div className="bg-black/20 rounded-xl p-4">
-                            <Clock className="h-6 w-6 mx-auto mb-2 text-blue-400" />
-                            <div className="text-2xl font-bold">{formatTime(timeElapsed)}</div>
-                            <div className="text-xs text-gray-400">Time</div>
+                        <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                            <Clock className="h-6 w-6 mx-auto mb-2 text-blue-500" />
+                            <div className="text-2xl font-bold text-blue-700">{formatTime(timeElapsed)}</div>
+                            <div className="text-xs text-blue-600/80 font-bold uppercase tracking-wider mt-1">Time</div>
                         </div>
-                        <div className="bg-black/20 rounded-xl p-4">
-                            <Heart className="h-6 w-6 mx-auto mb-2 text-red-400" />
-                            <div className="text-2xl font-bold">{lives}</div>
-                            <div className="text-xs text-gray-400">Lives Left</div>
+                        <div className="bg-rose-50 border border-rose-100 rounded-xl p-4">
+                            <Heart className="h-6 w-6 mx-auto mb-2 text-rose-500" />
+                            <div className="text-2xl font-bold text-rose-700">{lives}</div>
+                            <div className="text-xs text-rose-600/80 font-bold uppercase tracking-wider mt-1">Lives Left</div>
                         </div>
                     </div>
 
                     <div className="space-y-3">
                         <button
                             onClick={restartGame}
-                            className="w-full py-3 bg-green-600 hover:bg-green-500 rounded-xl font-bold transition-all"
+                            className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white shadow-md hover:shadow-lg rounded-xl font-bold transition-all hover:-translate-y-1"
                         >
                             Play Again
                         </button>
                         <button
                             onClick={() => navigate('/gamified-assessment')}
-                            className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-all"
+                            className="w-full py-3 bg-white border border-gray-200 text-slate-700 hover:text-orange-500 hover:border-orange-200 shadow-sm hover:shadow-md rounded-xl font-bold transition-all hover:-translate-y-1"
                         >
                             Back to Games
                         </button>
@@ -249,31 +255,37 @@ export default function LogicLabyrinth() {
     // Game Over Screen
     if (gameState === 'gameover') {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-red-900 to-gray-900 text-white p-8 flex items-center justify-center">
+            <div className="min-h-screen bg-slate-50 text-slate-900 p-8 flex items-center justify-center relative overflow-hidden">
+                {/* Decorative background blobs */}
+                <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+                    <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-rose-200/50 blur-3xl"></div>
+                    <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-red-200/50 blur-3xl"></div>
+                </div>
+
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="max-w-md w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 text-center"
+                    className="max-w-md w-full bg-white/80 backdrop-blur-xl border border-gray-200 shadow-xl rounded-3xl p-8 text-center"
                 >
-                    <XCircle className="h-24 w-24 text-red-400 mx-auto mb-6" />
-                    <h1 className="text-4xl font-black mb-4">Trapped!</h1>
-                    <p className="text-red-200 mb-6">You ran out of lives on Floor {currentFloor + 1}</p>
+                    <XCircle className="h-24 w-24 text-rose-500 mx-auto mb-6 drop-shadow-sm" />
+                    <h1 className="text-4xl font-black mb-4 text-slate-900">Trapped!</h1>
+                    <p className="text-slate-600 font-medium mb-6">You ran out of lives on Floor {currentFloor + 1}</p>
 
-                    <div className="bg-white/5 rounded-xl p-4 mb-8">
-                        <div className="text-sm text-gray-400 mb-2">You made it to:</div>
-                        <div className="text-3xl font-bold">Floor {currentFloor + 1} / {floors.length}</div>
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-8">
+                        <div className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">You made it to:</div>
+                        <div className="text-3xl font-black text-rose-600">Floor {currentFloor + 1} / {floors.length}</div>
                     </div>
 
                     <div className="space-y-3">
                         <button
                             onClick={restartGame}
-                            className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold transition-all"
+                            className="w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white shadow-md hover:shadow-lg rounded-xl font-bold transition-all hover:-translate-y-1"
                         >
                             Try Again
                         </button>
                         <button
                             onClick={() => navigate('/gamified-assessment')}
-                            className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-all"
+                            className="w-full py-3 bg-white border border-gray-200 text-slate-700 hover:text-orange-500 hover:border-orange-200 shadow-sm hover:shadow-md rounded-xl font-bold transition-all hover:-translate-y-1"
                         >
                             Back to Games
                         </button>
@@ -287,17 +299,23 @@ export default function LogicLabyrinth() {
     const floor = floors[currentFloor];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 text-white p-4 md:p-8">
+        <div className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8 relative overflow-hidden">
+            {/* Decorative background blobs */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-200/40 blur-3xl"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-200/40 blur-3xl"></div>
+            </div>
+
             {/* Header */}
             <div className="max-w-4xl mx-auto mb-8">
                 <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-3xl md:text-4xl font-black flex items-center gap-3">
-                        <TowerControl className="h-8 w-8 text-purple-400" />
+                    <h1 className="text-3xl md:text-4xl font-black flex items-center gap-3 text-slate-900">
+                        <TowerControl className="h-8 w-8 text-indigo-500" />
                         Logic Labyrinth
                     </h1>
                     <button
                         onClick={() => navigate('/gamified-assessment')}
-                        className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all flex items-center gap-2"
+                        className="px-4 py-2 bg-white border border-gray-200 text-slate-700 hover:text-indigo-600 hover:border-indigo-200 shadow-sm hover:shadow-md rounded-lg transition-all flex items-center gap-2 font-medium hover:-translate-y-1"
                     >
                         <Home className="h-4 w-4" />
                         Exit
@@ -305,23 +323,23 @@ export default function LogicLabyrinth() {
                 </div>
 
                 {/* Stats Bar */}
-                <div className="flex items-center gap-4 bg-black/20 backdrop-blur-xl p-4 rounded-2xl border border-white/10">
+                <div className="flex items-center gap-4 bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-gray-200 shadow-sm">
                     <div className="flex items-center gap-2">
-                        <ArrowUp className="h-5 w-5 text-green-400" />
-                        <span className="font-bold">Floor {currentFloor + 1}/{floors.length}</span>
+                        <ArrowUp className="h-5 w-5 text-emerald-500" />
+                        <span className="font-bold text-slate-700">Floor <span className="text-emerald-600">{currentFloor + 1}</span>/{floors.length}</span>
                     </div>
-                    <div className="h-6 w-px bg-white/20"></div>
+                    <div className="h-6 w-px bg-gray-200"></div>
                     <div className="flex items-center gap-2">
-                        <Clock className="h-5 w-5 text-blue-400" />
-                        <span className="font-mono">{formatTime(timeElapsed)}</span>
+                        <Clock className="h-5 w-5 text-blue-500" />
+                        <span className="font-mono font-bold text-slate-700">{formatTime(timeElapsed)}</span>
                     </div>
-                    <div className="h-6 w-px bg-white/20"></div>
+                    <div className="h-6 w-px bg-gray-200"></div>
                     <div className="flex items-center gap-2">
                         <div className="flex gap-1">
                             {[...Array(3)].map((_, i) => (
                                 <Heart
                                     key={i}
-                                    className={`h-5 w-5 ${i < lives ? 'text-red-500 fill-red-500' : 'text-gray-600'}`}
+                                    className={`h-5 w-5 ${i < lives ? 'text-rose-500 fill-rose-500' : 'text-slate-200'}`}
                                 />
                             ))}
                         </div>
@@ -335,20 +353,20 @@ export default function LogicLabyrinth() {
                     key={currentFloor}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20"
+                    className="bg-white/80 backdrop-blur-md rounded-3xl p-8 border border-gray-200 shadow-sm"
                 >
                     {/* Floor Header */}
                     <div className="mb-6">
-                        <div className="text-sm text-purple-300 mb-2">Floor {floor.floor}</div>
-                        <h2 className="text-3xl font-black mb-3">{floor.title}</h2>
-                        <p className="text-indigo-200 leading-relaxed">{floor.description}</p>
+                        <div className="text-sm font-bold text-indigo-500 uppercase tracking-wider mb-2">Floor {floor.floor}</div>
+                        <h2 className="text-3xl font-black mb-3 text-slate-900">{floor.title}</h2>
+                        <p className="text-slate-600 leading-relaxed font-medium">{floor.description}</p>
                     </div>
 
                     {/* Question */}
-                    <div className="bg-yellow-500/20 border-2 border-yellow-500/50 rounded-2xl p-6 mb-6">
+                    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6 shadow-sm">
                         <div className="flex items-start gap-3">
-                            <Brain className="h-6 w-6 text-yellow-300 flex-shrink-0 mt-1" />
-                            <p className="text-lg font-semibold text-yellow-50">{floor.question}</p>
+                            <Brain className="h-6 w-6 text-amber-500 flex-shrink-0 mt-1" />
+                            <p className="text-lg font-bold text-amber-900">{floor.question}</p>
                         </div>
                     </div>
 
@@ -358,17 +376,17 @@ export default function LogicLabyrinth() {
                             <button
                                 key={idx}
                                 onClick={() => setAnswer(option)}
-                                className={`w-full text-left p-4 rounded-xl border-2 transition-all ${answer === option
-                                        ? 'bg-indigo-500/30 border-indigo-400'
-                                        : 'bg-white/5 border-white/10 hover:border-white/30'
+                                className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${answer === option
+                                    ? 'bg-indigo-50 border-indigo-400 shadow-md transform -translate-y-1'
+                                    : 'bg-white border-gray-200 hover:border-indigo-300 hover:shadow-sm'
                                     }`}
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${answer === option ? 'border-indigo-400 bg-indigo-500' : 'border-gray-400'
+                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${answer === option ? 'border-indigo-500 bg-indigo-500' : 'border-gray-300'
                                         }`}>
-                                        {answer === option && <div className="w-3 h-3 bg-white rounded-full"></div>}
+                                        {answer === option && <div className="w-2 h-2 bg-white rounded-full"></div>}
                                     </div>
-                                    <span className="font-medium">{option}</span>
+                                    <span className={`font-medium ${answer === option ? 'text-indigo-900' : 'text-slate-700'}`}>{option}</span>
                                 </div>
                             </button>
                         ))}
@@ -379,14 +397,14 @@ export default function LogicLabyrinth() {
                         <button
                             onClick={checkAnswer}
                             disabled={!answer}
-                            className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-700 disabled:cursor-not-allowed rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                            className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed text-white shadow-md rounded-xl font-bold transition-all flex items-center justify-center gap-2 hover:-translate-y-1 disabled:hover:translate-y-0 disabled:hover:shadow-none"
                         >
                             <CheckCircle2 className="h-5 w-5" />
                             Submit Answer
                         </button>
                         <button
                             onClick={() => setShowHint(!showHint)}
-                            className="px-6 py-4 bg-purple-600 hover:bg-purple-500 rounded-xl font-bold transition-all"
+                            className="px-6 py-4 bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-200 rounded-xl font-bold transition-all hover:-translate-y-1 shadow-sm"
                         >
                             <Lightbulb className="h-5 w-5" />
                         </button>
@@ -399,30 +417,30 @@ export default function LogicLabyrinth() {
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
                                 exit={{ opacity: 0, height: 0 }}
-                                className="mt-4 bg-green-500/20 border border-green-500/50 rounded-xl p-4"
+                                className="mt-4 bg-emerald-50 border border-emerald-200 rounded-xl p-4 shadow-sm"
                             >
-                                <h4 className="font-bold text-green-300 mb-2 flex items-center gap-2">
+                                <h4 className="font-bold text-emerald-700 mb-2 flex items-center gap-2">
                                     <Lightbulb className="h-4 w-4" />
                                     Hint:
                                 </h4>
-                                <p className="text-green-100 text-sm">{floor.hint}</p>
+                                <p className="text-emerald-800 text-sm font-medium">{floor.hint}</p>
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </motion.div>
 
                 {/* Floor Progress */}
-                <div className="mt-6 bg-black/20 backdrop-blur-xl rounded-2xl p-4 border border-white/10">
-                    <div className="text-sm text-gray-400 mb-2">Progress</div>
-                    <div className="flex gap-2">
+                <div className="mt-6 bg-white/80 backdrop-blur-md rounded-2xl p-4 border border-gray-200 shadow-sm">
+                    <div className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Progress</div>
+                    <div className="flex gap-1 h-3">
                         {floors.map((_, idx) => (
                             <div
                                 key={idx}
-                                className={`flex-1 h-2 rounded-full ${idx < currentFloor
-                                        ? 'bg-green-500'
-                                        : idx === currentFloor
-                                            ? 'bg-indigo-500'
-                                            : 'bg-gray-700'
+                                className={`flex-1 rounded-full transition-colors duration-300 ${idx < currentFloor
+                                    ? 'bg-emerald-400'
+                                    : idx === currentFloor
+                                        ? 'bg-indigo-500 scale-y-125 shadow-sm'
+                                        : 'bg-slate-200'
                                     }`}
                             />
                         ))}

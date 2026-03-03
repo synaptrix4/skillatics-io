@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f27f0d",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        .frosted-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(242, 127, 13, 0.1);
+        }
+        .ambient-glow {
+            position: absolute;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, rgba(242, 127, 13, 0.08) 0%, rgba(242, 127, 13, 0) 70%);
+            border-radius: 100%;
+            z-index: -1;
+        }
+    </style>
+<title>Skillatics Login Portal</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark h-screen w-full relative flex flex-col font-display text-slate-900 dark:text-slate-100">
+<!-- Ambient Glow Backgrounds -->
+<div class="ambient-glow -top-20 -left-20"></div>
+<div class="ambient-glow -bottom-20 -right-20"></div>
+<!-- Floating Nav Bar -->
+<nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-4xl px-4">
+<div class="frosted-glass rounded-full px-6 py-3 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-xl">database</span>
+</div>
+<span class="font-bold text-lg tracking-tight text-slate-900">Skillatics</span>
+</div>
+<div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+<a class="hover:text-primary transition-colors" href="#">Product</a>
+<a class="hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="hover:text-primary transition-colors" href="#">Pricing</a>
+</div>
+<div class="flex items-center gap-3">
+<button class="text-sm font-semibold px-4 py-2 text-slate-700 hover:text-primary transition-colors">Support</button>
+<button class="bg-primary text-white text-sm font-bold px-5 py-2 rounded-full shadow-md shadow-primary/20 hover:bg-primary/90 transition-all">Get Started</button>
+</div>
+</div>
+</nav>
+<!-- Main Content (Centered Login Card) -->
+<main class="flex-1 flex items-center justify-center px-4 pt-20">
+<div class="w-full max-w-[460px] bg-white dark:bg-slate-900 rounded-xl shadow-[0_32px_64px_-16px_rgba(242,127,13,0.12)] p-10 border border-slate-100 dark:border-slate-800">
+<div class="text-center mb-10">
+<h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-3">Welcome Back</h1>
+<p class="text-slate-500 dark:text-slate-400">Access your Skillatics assessment dashboard</p>
+</div>
+<form class="space-y-5">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Work Email</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary">
+<span class="material-symbols-outlined text-lg">mail</span>
+</div>
+<input class="w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl transition-all text-slate-900 dark:text-white placeholder:text-slate-400" placeholder="name@company.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center ml-1">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
+<a class="text-xs font-semibold text-primary hover:underline" href="#">Forgot password?</a>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary">
+<span class="material-symbols-outlined text-lg">lock</span>
+</div>
+<input class="w-full pl-11 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl transition-all text-slate-900 dark:text-white placeholder:text-slate-400" placeholder="••••••••" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors" type="button">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center gap-3 ml-1">
+<input class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary/20 cursor-pointer" id="remember" type="checkbox"/>
+<label class="text-sm text-slate-600 dark:text-slate-400 cursor-pointer select-none" for="remember">Keep me logged in</label>
+</div>
+<!-- Login Button -->
+<button class="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 transition-all text-base mt-2" type="submit">
+                    Sign In to Portal
+                </button>
+</form>
+<!-- SSO Options -->
+<div class="mt-8">
+<div class="relative flex items-center justify-center mb-6">
+<div class="border-t border-slate-100 dark:border-slate-800 w-full absolute"></div>
+<span class="bg-white dark:bg-slate-900 px-4 text-xs font-bold text-slate-400 uppercase tracking-widest relative z-10">Or continue with</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 py-3 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors font-semibold text-sm text-slate-700 dark:text-slate-200">
+<img alt="Google" class="w-5 h-5" data-alt="Google logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0oQvWBa-7FX_sSulMgYA3njOoB4nU2voXPbuhqlqovt2g0j4E8BcYpqrYG1v0Kk3Sb3TRUDoJMGp1inPv1v4RvMCWTAwM_Mf_rARviou69ezqeF4PpOY1cJFjf8qExx_Cw6cF5KUqL5PRHtbG0Ugu2zqSb88YCZzZCAR91GSHpUj-WZMAZ3R3GLUcWDmSjmg-A6nTIl5Lz_cqQErO8K9qjw8FmAVFOBDrPiBdh5hxd7bseg8KjqW_GkqWWCMHBh68i19zJyfvkQ"/>
+                        Google
+                    </button>
+<button class="flex items-center justify-center gap-2 py-3 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors font-semibold text-sm text-slate-700 dark:text-slate-200">
+<img alt="Microsoft" class="w-5 h-5" data-alt="Microsoft logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA09gPkhoDK2dtOynDmmtkFMn7qVCKsKyi5bt5ndRrzzxpSYQKAkP1VfxyZefmxA7DF-qyPAad01AiMX7Z45IDBcGvd_xYUdAGoL9NSv_ye0TorHexylPz3dthvYloCdAn04xjx1BSCZuvA58eNnIi3R7OqTdknRLglXNsOTVlsRz96g3p7DjvW22E6fh4K1QV4CcYV3Sw_Vh7EhMe3nqeASHPbonPskXC9AVORzZuY0f8iaMyEZNBkvMSlMX9lVipszrMuC836JA"/>
+                        Azure SSO
+                    </button>
+</div>
+</div>
+<!-- Footer Link -->
+<p class="mt-10 text-center text-sm text-slate-500 dark:text-slate-400">
+                New to the platform? 
+                <a class="text-primary font-bold hover:underline" href="#">Contact your admin</a>
+</p>
+</div>
+</main>
+<!-- Page Footer (Hidden or minimal) -->
+<footer class="p-6 text-center">
+<p class="text-[10px] text-slate-400 uppercase tracking-[0.2em]">© 2024 Skillatics AI Platform. Secure Enterprise Access.</p>
+</footer>
+</body></html>

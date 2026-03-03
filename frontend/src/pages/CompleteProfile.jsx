@@ -39,11 +39,11 @@ export default function CompleteProfile() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-violet-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-orange-50 via-white to-amber-50 px-4 py-12">
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="mb-8 text-center">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 shadow-lg mb-4">
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 shadow-lg mb-4">
             <GraduationCap className="h-8 w-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Complete Your Profile</h1>
@@ -69,12 +69,12 @@ export default function CompleteProfile() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                <input 
-                  name="name" 
-                  value={form.name} 
-                  onChange={handleChange} 
-                  required 
-                  className="w-full rounded-lg border border-gray-300 pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2" 
+                <input
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full rounded-lg border border-gray-300 pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -85,13 +85,13 @@ export default function CompleteProfile() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                <input 
-                  name="mobile" 
-                  value={form.mobile} 
-                  onChange={handleChange} 
-                  required 
-                  className="w-full rounded-lg border border-gray-300 pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2" 
-                  type="tel" 
+                <input
+                  name="mobile"
+                  value={form.mobile}
+                  onChange={handleChange}
+                  required
+                  className="w-full rounded-lg border border-gray-300 pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
+                  type="tel"
                   pattern="[0-9]{10,}"
                   placeholder="10-digit mobile number"
                 />
@@ -103,11 +103,11 @@ export default function CompleteProfile() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
               <div className="relative">
                 <Users className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                <select 
-                  name="gender" 
-                  value={form.gender} 
-                  onChange={handleChange} 
-                  required 
+                <select
+                  name="gender"
+                  value={form.gender}
+                  onChange={handleChange}
+                  required
                   className="w-full rounded-lg border border-gray-300 bg-white pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
                 >
                   <option value="">Select Gender</option>
@@ -123,11 +123,11 @@ export default function CompleteProfile() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
               <div className="relative">
                 <Building2 className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                <select 
-                  name="department" 
-                  value={form.department} 
-                  onChange={handleChange} 
-                  required 
+                <select
+                  name="department"
+                  value={form.department}
+                  onChange={handleChange}
+                  required
                   className="w-full rounded-lg border border-gray-300 bg-white pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
                 >
                   <option value="">Select Department</option>
@@ -175,13 +175,13 @@ export default function CompleteProfile() {
             {/* Division */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Division</label>
-              <input 
-                name="division" 
-                value={form.division} 
-                onChange={handleChange} 
-                required 
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2" 
-                placeholder="e.g. A, B, C" 
+              <input
+                name="division"
+                value={form.division}
+                onChange={handleChange}
+                required
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
+                placeholder="e.g. A, B, C"
               />
             </div>
 
@@ -190,13 +190,13 @@ export default function CompleteProfile() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Roll Number</label>
               <div className="relative">
                 <Hash className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                <input 
-                  name="rollNo" 
-                  value={form.rollNo} 
-                  onChange={handleChange} 
-                  required 
-                  className="w-full rounded-lg border border-gray-300 pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2" 
-                  placeholder="e.g. 21CE1001" 
+                <input
+                  name="rollNo"
+                  value={form.rollNo}
+                  onChange={handleChange}
+                  required
+                  className="w-full rounded-lg border border-gray-300 pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
+                  placeholder="e.g. 21CE1001"
                 />
               </div>
             </div>
@@ -211,9 +211,9 @@ export default function CompleteProfile() {
           )}
 
           {/* Submit Button */}
-          <button 
-            type="submit" 
-            disabled={loading} 
+          <button
+            type="submit"
+            disabled={loading}
             className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? (

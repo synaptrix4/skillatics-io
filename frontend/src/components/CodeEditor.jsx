@@ -1,33 +1,57 @@
 import { useState, useRef, useEffect } from 'react'
 import Editor from '@monaco-editor/react'
-import { Play, CheckCircle2, XCircle, Terminal, AlertCircle, RotateCcw } from 'lucide-react'
+import { CheckCircle2, XCircle, Terminal, RotateCcw, ChevronDown, ChevronUp, Play, Loader2 } from 'lucide-react'
 import { api } from '../lib/api'
 
 const LANGUAGES = [
-    { id: 'python', name: 'Python', icon: '🐍', template: '# Write your code here\ndef solution(nums, target):\n    # Example: Two Sum\n    pass\n' },
-    { id: 'java', name: 'Java', icon: '☕', template: 'public class Main {\n    public static void main(String[] args) {\n        // Write your code here\n    }\n}' },
-    { id: 'cpp', name: 'C++', icon: '⚡', template: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // Write your code here\n    return 0;\n}' },
-    { id: 'javascript', name: 'JavaScript', icon: '📜', template: '// Write your code here\nconst solution = () => {\n    \n}\n' },
+    { id: 'python', name: 'Python', icon: '🐍' },
+    { id: 'javascript', name: 'JavaScript', icon: 'JS' },
+    { id: 'java', name: 'Java', icon: 'JV' },
+    { id: 'cpp', name: 'C++', icon: 'C+' },
 ]
 
+/**
+ * Get starter code for a language.
+ * Priority:
+ *   1. question.starter_code[lang]  — always provided by backend (auto-generated from function_name + input_format)
+ *   2. Generic stub with function_name as fallback
+ */
+function getStarterCode(question, lang) {
+    if (question?.starter_code?.[lang]) return question.starter_code[lang]
+    const fn = question?.function_name || 'solution'
+    const stubs = {
+        python: `def ${fn}(*args):\n    # Write your solution here\n    pass\n`,
+        javascript: `var ${fn} = function(...args) {\n    // Write your solution here\n};\n`,
+        java: `class Solution {\n    public Object ${fn}() {\n        // Write your solution here\n    }\n}`,
+        cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    // Write your solution here\n};`,
+    }
+    return stubs[lang] || '// Write your solution here\n'
+}
+
 export default function CodeEditor({ question, onSubmit, readonly = false }) {
-    const [code, setCode] = useState('')
     const [language, setLanguage] = useState('python')
     const [output, setOutput] = useState('')
     const [executing, setExecuting] = useState(false)
     const [testResults, setTestResults] = useState(null)
-    const [activeTab, setActiveTab] = useState('output') // output | testcases
+    const [activeTab, setActiveTab] = useState('console')
+    const [consoleOpen, setConsoleOpen] = useState(true)
     const editorRef = useRef(null)
 
-    // Initialize code with starter code from question or language template
+    // Initialize immediately with the correct starter code
+    const [code, setCode] = useState(() => getStarterCode(question, 'python'))
+
+    // When question or language changes — update state AND push directly into Monaco
     useEffect(() => {
-        const lang = LANGUAGES.find(l => l.id === language)
-        if (lang && !code) {
-            // Use question's starter code if available, otherwise use default template
-            const starterCode = question?.starter_code?.[language] || lang.template
-            setCode(starterCode)
+        const newCode = getStarterCode(question, language)
+        setCode(newCode)
+        if (editorRef.current) {
+            editorRef.current.setValue(newCode)
         }
-    }, [language, question])
+        setOutput('')
+        setTestResults(null)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [question?._id, language])
+
 
     const handleEditorDidMount = (editor) => {
         editorRef.current = editor
@@ -36,12 +60,8 @@ export default function CodeEditor({ question, onSubmit, readonly = false }) {
 
     const handleLanguageChange = (newLang) => {
         setLanguage(newLang)
-        const lang = LANGUAGES.find(l => l.id === newLang)
-        if (lang) {
-            // Use question's starter code if available
-            const starterCode = question?.starter_code?.[newLang] || lang.template
-            setCode(starterCode)
-        }
+        const starterCode = question?.starter_code?.[newLang] || getTemplate(newLang, functionName)
+        setCode(starterCode)
         setOutput('')
         setTestResults(null)
     }
@@ -49,32 +69,67 @@ export default function CodeEditor({ question, onSubmit, readonly = false }) {
     const runCode = async () => {
         if (!code.trim()) {
             setOutput('Error: No code to execute')
-            setActiveTab('output')
+            setConsoleOpen(true)
+            setActiveTab('console')
             return
         }
-
         setExecuting(true)
-        setOutput('Running...')
+        setOutput('⏳ Running against test cases...')
         setTestResults(null)
-        setActiveTab('output')
+        setActiveTab('console')
+        setConsoleOpen(true)
 
         try {
-            const resp = await api.post('/code/execute', {
-                source_code: code,
-                language: language,
-                test_cases: question?.test_cases || []
-            })
+            let resp
+
+            if (question?._id) {
+                // Try the /code/run endpoint which fetches all test cases from DB
+                try {
+                    resp = await api.post('/code/run', {
+                        source_code: code,
+                        language,
+                        questionId: question._id,
+                        function_name: question?.function_name,
+                        input_format: question?.input_format,
+                    })
+                } catch (runErr) {
+                    // 404 means backend hasn't restarted yet — fall back gracefully
+                    if (runErr.response?.status === 404) {
+                        resp = await api.post('/code/execute', {
+                            source_code: code,
+                            language,
+                            test_cases: question?.test_cases || [],
+                            function_name: question?.function_name,
+                            input_format: question?.input_format,
+                        })
+                    } else {
+                        throw runErr
+                    }
+                }
+            } else {
+                resp = await api.post('/code/execute', {
+                    source_code: code,
+                    language,
+                    test_cases: question?.test_cases || [],
+                    function_name: question?.function_name,
+                    input_format: question?.input_format,
+                })
+            }
 
             if (resp.data.test_results) {
-                // Test case results
                 setTestResults(resp.data)
                 setActiveTab('testcases')
+                const firstRes = resp.data.test_results.find(r => !r.hidden)
+                setOutput(
+                    firstRes?.error
+                    || firstRes?.actual_output
+                    || (resp.data.success ? '✓ All test cases passed!' : '✗ Some test cases failed.')
+                )
             } else {
-                // Single execution
                 setOutput(resp.data.output || resp.data.stdout || resp.data.error || 'No output')
             }
         } catch (err) {
-            setOutput(`Error: ${err.response?.data?.error || err.message}`)
+            setOutput(`❌ Error: ${err.response?.data?.error || err.message}`)
         } finally {
             setExecuting(false)
         }
@@ -82,93 +137,80 @@ export default function CodeEditor({ question, onSubmit, readonly = false }) {
 
     const submitSolution = async () => {
         if (!question || !code.trim()) return
-
         setExecuting(true)
+        setConsoleOpen(true)
+        setOutput('⏳ Submitting...')
+        setActiveTab('testcases')
+
         try {
             const resp = await api.post('/code/submit-coding-test', {
                 questionId: question._id,
                 source_code: code,
-                language: language
+                language,
+                function_name: question?.function_name,
+                input_format: question?.input_format
             })
-
             setTestResults(resp.data)
-            setActiveTab('testcases')
-
-            if (onSubmit) {
-                onSubmit(resp.data)
-            }
+            const firstRes = resp.data.test_results?.[0]
+            setOutput(firstRes?.error || firstRes?.actual_output || '✓ Submitted.')
+            if (onSubmit) onSubmit(resp.data)
         } catch (err) {
-            setOutput(`Error: ${err.response?.data?.error || err.message}`)
-            setActiveTab('output')
+            setOutput(`❌ Error: ${err.response?.data?.error || err.message}`)
+            setActiveTab('console')
         } finally {
             setExecuting(false)
         }
     }
 
     const resetCode = () => {
-        const lang = LANGUAGES.find(l => l.id === language)
-        if (lang) setCode(lang.template)
+        setCode(question?.starter_code?.[language] || getTemplate(language, functionName))
     }
 
     return (
-        <div className="flex flex-col h-full bg-white border rounded-xl overflow-hidden shadow-sm">
-            {/* Toolbar */}
-            <div className="flex items-center justify-between p-3 bg-gray-50 border-b">
-                <div className="flex items-center gap-3">
-                    <select
-                        value={language}
-                        onChange={(e) => handleLanguageChange(e.target.value)}
-                        disabled={readonly}
-                        className="px-3 py-1.5 border border-gray-300 rounded-md bg-white text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    >
-                        {LANGUAGES.map(lang => (
-                            <option key={lang.id} value={lang.id}>
-                                {lang.icon} {lang.name}
-                            </option>
-                        ))}
-                    </select>
+        <div className="flex flex-col h-full bg-slate-900 overflow-hidden">
+            {/* ── Toolbar ── */}
+            <div className="flex-shrink-0 flex items-center justify-between px-4 py-2 bg-slate-800 border-b border-slate-700/80">
+                <div className="flex items-center gap-2">
+                    {/* Language Selector */}
+                    <div className="relative">
+                        <select
+                            value={language}
+                            onChange={(e) => handleLanguageChange(e.target.value)}
+                            disabled={readonly}
+                            className="appearance-none pl-8 pr-6 py-1.5 bg-slate-700 border border-slate-600/80 rounded-lg text-slate-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/40 cursor-pointer hover:bg-slate-600 transition-colors"
+                        >
+                            {LANGUAGES.map(l => (
+                                <option key={l.id} value={l.id}>{l.name}</option>
+                            ))}
+                        </select>
+                        <span className="absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none text-[11px] font-bold text-slate-400">
+                            {LANGUAGES.find(l => l.id === language)?.icon}
+                        </span>
+                        <ChevronDown className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none h-3.5 w-3.5 text-slate-400" />
+                    </div>
+                </div>
 
+                <div className="flex items-center gap-1">
                     <button
                         onClick={resetCode}
-                        className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-md transition-colors"
-                        title="Reset Code"
+                        className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-md transition-colors"
+                        title="Reset to starter code"
                     >
                         <RotateCcw className="h-4 w-4" />
                     </button>
                 </div>
-
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={runCode}
-                        disabled={executing || readonly}
-                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 disabled:opacity-50 text-sm font-medium transition-colors"
-                    >
-                        <Play className="h-3.5 w-3.5" />
-                        Run
-                    </button>
-
-                    {question && onSubmit && (
-                        <button
-                            onClick={submitSolution}
-                            disabled={executing || readonly}
-                            className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 text-sm font-medium transition-colors shadow-sm"
-                        >
-                            <CheckCircle2 className="h-3.5 w-3.5" />
-                            Submit
-                        </button>
-                    )}
-                </div>
             </div>
 
-            {/* Editor Area */}
-            <div className={`flex-1 min-h-[400px] relative`}>
+            {/* ── Monaco Editor ── */}
+            <div className="flex-1 min-h-0">
                 <Editor
+                    key={`${language}-${question?._id || 'default'}`}
                     height="100%"
                     language={language}
                     value={code}
                     onChange={(value) => setCode(value || '')}
                     onMount={handleEditorDidMount}
-                    theme="vs-light" // Use light theme to match UI
+                    theme="vs-dark"
                     options={{
                         minimap: { enabled: false },
                         fontSize: 14,
@@ -177,97 +219,131 @@ export default function CodeEditor({ question, onSubmit, readonly = false }) {
                         automaticLayout: true,
                         tabSize: 4,
                         readOnly: readonly,
-                        fontFamily: "'Fira Code', Consolas, 'Courier New', monospace",
+                        fontFamily: "'Fira Code', 'Cascadia Code', Consolas, monospace",
+                        fontLigatures: true,
+                        padding: { top: 12, bottom: 12 },
+                        renderLineHighlight: 'all',
+                        smoothScrolling: true,
+                        cursorBlinking: 'smooth',
                     }}
                 />
             </div>
 
-            {/* Output / Console Panel */}
-            <div className="border-t bg-gray-50 h-[250px] flex flex-col">
-                {/* Tabs */}
-                <div className="flex border-b bg-white">
-                    <button
-                        onClick={() => setActiveTab('testcases')}
-                        className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'testcases' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-                    >
-                        Test Cases
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('output')}
-                        className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'output' ? 'border-indigo-600 text-indigo-700' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-                    >
-                        Console Output
-                    </button>
+            {/* ── Console / Test Results Panel ── */}
+            <div className={`flex-shrink-0 flex flex-col bg-slate-950 border-t border-slate-700/80 transition-all duration-300 ${consoleOpen ? 'h-56' : 'h-10'}`}>
+                {/* Console Tab Bar */}
+                <div className="flex items-center justify-between px-3 bg-slate-800/80 border-b border-slate-700/60 h-10 flex-shrink-0">
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={() => { setActiveTab('console'); setConsoleOpen(true) }}
+                            className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-semibold transition-colors ${activeTab === 'console' && consoleOpen ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                        >
+                            <Terminal className="h-3.5 w-3.5" /> Console
+                        </button>
+                        <button
+                            onClick={() => { setActiveTab('testcases'); setConsoleOpen(true) }}
+                            className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-semibold transition-colors ${activeTab === 'testcases' && consoleOpen ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                        >
+                            <CheckCircle2 className="h-3.5 w-3.5" /> Test Cases
+                            {testResults && (
+                                <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${testResults.success ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
+                                    {testResults.passed_tests}/{testResults.total_tests}
+                                </span>
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Run & Submit buttons + toggle */}
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={runCode}
+                            disabled={executing || readonly}
+                            className="flex items-center gap-1.5 px-4 py-1 bg-slate-600 hover:bg-slate-500 disabled:opacity-50 text-white rounded-md text-xs font-bold transition-colors"
+                        >
+                            {executing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
+                            Run
+                        </button>
+                        {question && onSubmit && (
+                            <button
+                                onClick={submitSolution}
+                                disabled={executing || readonly}
+                                className="flex items-center gap-1.5 px-4 py-1 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white rounded-md text-xs font-bold transition-colors shadow-md shadow-orange-500/20"
+                            >
+                                Submit
+                            </button>
+                        )}
+                        <button
+                            onClick={() => setConsoleOpen(v => !v)}
+                            className="p-1 text-slate-500 hover:text-slate-300 transition-colors"
+                        >
+                            {consoleOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                        </button>
+                    </div>
                 </div>
 
-                {/* Content */}
-                <div className="flex-1 overflow-auto p-4 font-mono text-sm">
-                    {activeTab === 'output' && (
-                        <div className="text-gray-800 whitespace-pre-wrap">
-                            {output || <span className="text-gray-400 italic">Run your code to see output...</span>}
-                        </div>
-                    )}
+                {/* Console Content */}
+                {consoleOpen && (
+                    <div className="flex-1 overflow-auto p-3 font-mono text-sm">
+                        {activeTab === 'console' && (
+                            <pre className={`whitespace-pre-wrap text-[13px] leading-relaxed ${output.startsWith('❌') ? 'text-red-400' : 'text-emerald-400'}`}>
+                                {output || <span className="text-slate-600 italic">Run your code to see console output here...</span>}
+                            </pre>
+                        )}
 
-                    {activeTab === 'testcases' && (
-                        <div>
-                            {!testResults ? (
-                                <div className="text-gray-400 italic">Run or Submit to see test results...</div>
-                            ) : (
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        {testResults.success ? (
-                                            <span className="inline-flex items-center gap-1 text-green-700 font-bold bg-green-100 px-2 py-0.5 rounded text-xs">
-                                                <CheckCircle2 className="h-3 w-3" /> Accepted
-                                            </span>
-                                        ) : (
-                                            <span className="inline-flex items-center gap-1 text-red-700 font-bold bg-red-100 px-2 py-0.5 rounded text-xs">
-                                                <XCircle className="h-3 w-3" /> Wrong Answer
-                                            </span>
-                                        )}
-                                        <span className="text-gray-500 text-xs">
-                                            {testResults.passed_tests}/{testResults.total_tests} passed
-                                        </span>
-                                    </div>
-
+                        {activeTab === 'testcases' && (
+                            <div>
+                                {!testResults ? (
+                                    <p className="text-slate-600 italic text-[13px]">Run or Submit to see test case results here...</p>
+                                ) : (
                                     <div className="space-y-2">
+                                        {/* Summary badge */}
+                                        <div className="flex items-center gap-2 mb-3">
+                                            {testResults.success
+                                                ? <span className="inline-flex items-center gap-1.5 text-emerald-400 font-bold bg-emerald-400/10 px-2.5 py-1 rounded-full text-xs border border-emerald-400/20"><CheckCircle2 className="h-3.5 w-3.5" /> All Passed</span>
+                                                : <span className="inline-flex items-center gap-1.5 text-red-400 font-bold bg-red-400/10 px-2.5 py-1 rounded-full text-xs border border-red-400/20"><XCircle className="h-3.5 w-3.5" /> {testResults.passed_tests}/{testResults.total_tests} Passed</span>
+                                            }
+                                        </div>
+
+                                        {/* Individual test cases */}
                                         {testResults.test_results?.map((res, i) => (
-                                            <div key={i} className={`p-3 rounded border text-xs ${res.passed ? 'bg-green-50/50 border-green-200' : 'bg-red-50/50 border-red-200'}`}>
-                                                <div className="flex justify-between font-semibold mb-1">
-                                                    <span>Case {i + 1}</span>
-                                                    <span>{res.passed ? 'Pass' : 'Fail'}</span>
+                                            <div key={i} className={`rounded-lg border text-xs overflow-hidden ${res.passed ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-red-500/20 bg-red-500/5'}`}>
+                                                <div className={`flex items-center justify-between px-3 py-1.5 ${res.passed ? 'bg-emerald-500/10' : 'bg-red-500/10'}`}>
+                                                    <span className="font-bold text-slate-300">Case {i + 1}</span>
+                                                    <span className={`font-bold ${res.passed ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                        {res.passed ? '✓ Passed' : '✗ Failed'}
+                                                    </span>
                                                 </div>
                                                 {!res.hidden && (
-                                                    <div className="grid grid-cols-2 gap-2 mt-1">
+                                                    <div className="px-3 py-2 grid grid-cols-3 gap-3 font-mono">
                                                         <div>
-                                                            <span className="text-gray-500 block">Input:</span>
-                                                            <code className="bg-white px-1 rounded border border-gray-200 block overflow-hidden text-ellipsis">{res.input}</code>
+                                                            <div className="text-slate-500 text-[10px] uppercase tracking-wider mb-1">Input</div>
+                                                            <code className="text-slate-300 text-[11px]">{res.input || '—'}</code>
                                                         </div>
                                                         <div>
-                                                            <span className="text-gray-500 block">Output:</span>
-                                                            <code className="bg-white px-1 rounded border border-gray-200 block overflow-hidden text-ellipsis">{res.actual_output || '-'}</code>
+                                                            <div className="text-slate-500 text-[10px] uppercase tracking-wider mb-1">Output</div>
+                                                            <code className={`text-[11px] ${res.passed ? 'text-emerald-400' : 'text-red-400'}`}>{res.actual_output || '—'}</code>
                                                         </div>
-                                                        {res.expected_output && (
-                                                            <div className="col-span-2">
-                                                                <span className="text-gray-500 block">Expected:</span>
-                                                                <code className="bg-white px-1 rounded border border-gray-200 block overflow-hidden text-ellipsis">{res.expected_output}</code>
-                                                            </div>
-                                                        )}
-                                                        {res.error && (
-                                                            <div className="col-span-2 text-red-600">
-                                                                Error: {res.error}
-                                                            </div>
-                                                        )}
+                                                        <div>
+                                                            <div className="text-slate-500 text-[10px] uppercase tracking-wider mb-1">Expected</div>
+                                                            <code className="text-slate-300 text-[11px]">{res.expected_output || '—'}</code>
+                                                        </div>
                                                     </div>
                                                 )}
-                                                {res.hidden && <div className="text-gray-400 italic">Hidden Test Case</div>}
+                                                {res.error && (
+                                                    <div className="px-3 pb-2">
+                                                        <div className="text-red-500 text-[10px] uppercase tracking-wider mb-1">Error</div>
+                                                        <pre className="text-red-400 text-[11px] whitespace-pre-wrap">{res.error}</pre>
+                                                    </div>
+                                                )}
+                                                {res.hidden && <div className="px-3 py-2 text-slate-600 italic">Hidden test case</div>}
                                             </div>
                                         ))}
                                     </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     )

@@ -15,6 +15,10 @@ services:
       - POSTGRES_USER=judge0
       - POSTGRES_PASSWORD=Judge0Pass2024
       - ENABLE_WAIT_RESULT=true
+      - ENABLE_WAITPID_SIGCHLD=false
+      - ALLOW_CUSTOM_SANDBOX=false
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     depends_on:
       - judge0-db
       - judge0-redis
@@ -31,6 +35,10 @@ services:
       - POSTGRES_DB=judge0
       - POSTGRES_USER=judge0
       - POSTGRES_PASSWORD=Judge0Pass2024
+      - ENABLE_WAITPID_SIGCHLD=false
+      - ALLOW_CUSTOM_SANDBOX=false
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     depends_on:
       - judge0-db
       - judge0-redis

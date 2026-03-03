@@ -36,15 +36,15 @@ export default function StudentDashboard() {
     if (loading) return (
         <div className="flex min-h-[60vh] items-center justify-center">
             <div className="text-center">
-                <Loader2 className="mx-auto h-12 w-12 animate-spin text-indigo-600" />
-                <p className="mt-4 text-gray-600">Loading your analytics...</p>
+                <Loader2 className="mx-auto h-12 w-12 animate-spin text-orange-600" />
+                <p className="mt-4 text-slate-600">Loading your analytics...</p>
             </div>
         </div>
     )
 
     const lineData = {
         labels: rows.map(r => r.completedAt ? new Date(r.completedAt).toLocaleDateString() : 'N/A'),
-        datasets: [{ label: 'Score', data: rows.map(r => r.score), borderColor: '#4f46e5', backgroundColor: 'rgba(79,70,229,0.15)', tension: 0.4, fill: true }]
+        datasets: [{ label: 'Score', data: rows.map(r => r.score), borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.15)', tension: 0.4, fill: true }]
     }
 
     // Skill Radar Data
@@ -54,8 +54,8 @@ export default function StudentDashboard() {
             {
                 label: 'Proficiency',
                 data: skills.map(s => s.accuracy),
-                backgroundColor: 'rgba(99, 102, 241, 0.2)',
-                borderColor: '#6366f1',
+                backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                borderColor: '#f59e0b',
                 borderWidth: 2,
             }
         ]
@@ -69,11 +69,12 @@ export default function StudentDashboard() {
     return (
         <div className="space-y-8">
             {/* Hero Section */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 to-purple-600 p-8 shadow-xl">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 to-amber-600 p-8 shadow-xl shadow-orange-500/20">
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
                 <div className="relative z-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
                     <div>
                         <h1 className="text-3xl font-bold text-white">Welcome Back!</h1>
-                        <p className="mt-2 text-indigo-100">Ready to level up your skills today?</p>
+                        <p className="mt-2 text-orange-100">Ready to level up your skills today?</p>
                     </div>
                     <div className="flex items-center gap-4">
                         <Link
@@ -98,7 +99,7 @@ export default function StudentDashboard() {
                 </div>
                 {/* Decorative Circles */}
                 <div className="absolute -right-12 -top-12 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-                <div className="absolute -bottom-12 -left-12 h-48 w-48 rounded-full bg-purple-500/20 blur-2xl" />
+                <div className="absolute -bottom-12 -left-12 h-48 w-48 rounded-full bg-orange-400/20 blur-2xl" />
             </div>
 
             {/* Stats Grid */}
@@ -106,11 +107,11 @@ export default function StudentDashboard() {
                 <div className="glass-card rounded-2xl p-6 hover-scale">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-500">Average Score</p>
-                            <p className="mt-2 text-3xl font-bold text-gray-900">{avgScore}%</p>
+                            <p className="text-sm font-medium text-slate-500">Average Score</p>
+                            <p className="mt-2 text-3xl font-bold text-slate-900">{avgScore}%</p>
                         </div>
-                        <div className="rounded-xl bg-indigo-50 p-3 shadow-inner">
-                            <TrendingUp className="h-6 w-6 text-indigo-600" />
+                        <div className="rounded-xl bg-orange-50 p-3 shadow-inner">
+                            <TrendingUp className="h-6 w-6 text-orange-600" />
                         </div>
                     </div>
                 </div>
@@ -152,8 +153,8 @@ export default function StudentDashboard() {
             <div className="grid gap-8 lg:grid-cols-3">
                 {/* Skill Gap Analysis (Radar) */}
                 <div className="glass-card rounded-2xl p-6 lg:col-span-1">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <Target className="h-5 w-5 text-indigo-600" />
+                    <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <Target className="h-5 w-5 text-orange-600" />
                         Skill Analysis
                     </h3>
                     <div className="h-[300px] flex items-center justify-center">
@@ -182,7 +183,7 @@ export default function StudentDashboard() {
 
                 {/* Performance Trend */}
                 <div className="glass-card rounded-2xl p-6 lg:col-span-2">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Performance Trend</h3>
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Performance Trend</h3>
                     <div className="h-[300px]">
                         {rows.length > 0 ? (
                             <Line data={lineData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
@@ -214,9 +215,9 @@ export default function StudentDashboard() {
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-gray-900 capitalize">{rec.topic || "General Advice"}</h4>
-                                        <p className="mt-1 text-sm text-gray-600">{rec.message}</p>
+                                        <p className="mt-1 text-sm text-slate-600">{rec.message}</p>
                                         {rec.action && (
-                                            <Link to={rec.action} className="mt-3 inline-flex items-center text-xs font-semibold text-indigo-600 hover:text-indigo-700">
+                                            <Link to={rec.action} className="mt-3 inline-flex items-center text-xs font-semibold text-orange-600 hover:text-orange-700">
                                                 Take Action <ArrowRight className="ml-1 h-3 w-3" />
                                             </Link>
                                         )}
@@ -234,14 +235,14 @@ export default function StudentDashboard() {
 
             {/* Recent Activity */}
             <div className="glass-card rounded-2xl overflow-hidden">
-                <div className="border-b border-gray-100 bg-gray-50/50 px-6 py-4">
-                    <h3 className="text-lg font-bold text-gray-900">Recent Activity</h3>
+                <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+                    <h3 className="text-lg font-bold text-slate-900">Recent Activity</h3>
                 </div>
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-slate-100">
                     {rows.length === 0 ? (
                         <div className="px-6 py-12 text-center">
-                            <p className="text-gray-500">No recent activity found.</p>
-                            <Link to="/test" className="mt-2 font-medium text-indigo-600 hover:text-indigo-700">Get Started &rarr;</Link>
+                            <p className="text-slate-500">No recent activity found.</p>
+                            <Link to="/test" className="mt-2 font-medium text-orange-600 hover:text-orange-700">Get Started &rarr;</Link>
                         </div>
                     ) : (
                         rows.map(r => (

@@ -163,9 +163,9 @@ export default function GameSession() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-indigo-900 text-white">
+            <div className="flex items-center justify-center min-h-screen bg-slate-900 text-white">
                 <div className="text-center animate-pulse">
-                    <Zap className="h-12 w-12 mx-auto mb-4 text-yellow-400" />
+                    <Zap className="h-12 w-12 mx-auto mb-4 text-orange-400" />
                     <h2 className="text-2xl font-bold">Loading Game Assets...</h2>
                 </div>
             </div>
@@ -173,13 +173,13 @@ export default function GameSession() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white font-sans overflow-hidden selection:bg-purple-500">
+        <div className="min-h-screen bg-slate-900 text-white font-sans overflow-hidden selection:bg-orange-500">
 
             {/* Background Effects */}
             <div className="fixed inset-0 z-0 opacity-20 pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500 via-gray-900 to-black"></div>
-                <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-600 rounded-full blur-[120px] opacity-40"></div>
-                <div className="absolute top-10 left-10 w-72 h-72 bg-blue-600 rounded-full blur-[100px] opacity-30"></div>
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-500 via-slate-900 to-black"></div>
+                <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-600 rounded-full blur-[120px] opacity-40"></div>
+                <div className="absolute top-10 left-10 w-72 h-72 bg-amber-600 rounded-full blur-[100px] opacity-30"></div>
             </div>
 
             {/* --- LOBBY SCREEN --- */}
@@ -194,11 +194,11 @@ export default function GameSession() {
                             <Trophy className="h-16 w-16 text-white" />
                         </div>
 
-                        <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-100 to-purple-200">
+                        <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-orange-100 to-amber-200">
                             Ready to Play?
                         </h1>
 
-                        <p className="text-xl text-indigo-200 mb-10 max-w-lg mx-auto leading-relaxed">
+                        <p className="text-xl text-slate-300 mb-10 max-w-lg mx-auto leading-relaxed">
                             You're about to start the <strong>{modeId.replace('-', ' ').toUpperCase()}</strong>.
                             Be quick, be accurate, and build your streak multiplier!
                         </p>
@@ -230,7 +230,7 @@ export default function GameSession() {
                             </button>
                             <button
                                 onClick={startGame}
-                                className="px-10 py-4 rounded-xl font-bold text-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-lg shadow-indigo-600/40 hover:scale-105 transition-all flex items-center justify-center gap-2"
+                                className="px-10 py-4 rounded-xl font-bold text-lg bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 shadow-lg shadow-orange-600/40 hover:scale-105 transition-all flex items-center justify-center gap-2"
                             >
                                 <Zap className="h-5 w-5 fill-current" />
                                 Start Game
@@ -294,9 +294,9 @@ export default function GameSession() {
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="h-1.5 w-full bg-gray-800 rounded-full mb-8 overflow-hidden">
+                    <div className="h-1.5 w-full bg-slate-800 rounded-full mb-8 overflow-hidden">
                         <motion.div
-                            className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+                            className="h-full bg-gradient-to-r from-orange-500 to-amber-500"
                             initial={{ width: '0%' }}
                             animate={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}% ` }}
                             transition={{ type: "spring", stiffness: 50 }}
@@ -374,7 +374,7 @@ export default function GameSession() {
                         </div>
 
                         <h2 className="text-4xl font-black text-white mb-2">Game Over!</h2>
-                        <p className="text-indigo-200 mb-8">You showed great skill!</p>
+                        <p className="text-slate-300 mb-8">You showed great skill!</p>
 
                         <div className="grid grid-cols-2 gap-4 mb-8">
                             <div className="bg-black/20 rounded-2xl p-4">
@@ -398,7 +398,7 @@ export default function GameSession() {
                                     setCountdown(3);
                                     // Reset Time logic would be needed here deeply
                                 }}
-                                className="w-full py-4 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-lg"
+                                className="w-full py-4 rounded-xl font-bold bg-orange-600 hover:bg-orange-500 text-white transition-all shadow-lg"
                             >
                                 Play Again
                             </button>

@@ -78,7 +78,7 @@ export default function CodingTestPage() {
         return (
             <div className="flex min-h-screen items-center justify-center">
                 <div className="text-center">
-                    <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent"></div>
+                    <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-orange-600 border-r-transparent"></div>
                     <p className="mt-4 text-gray-600">Loading question...</p>
                 </div>
             </div>
@@ -129,7 +129,7 @@ export default function CodingTestPage() {
                         <div className="flex gap-4 justify-center">
                             <button
                                 onClick={() => window.location.reload()}
-                                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
+                                className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-medium"
                             >
                                 Try Another Problem
                             </button>
@@ -147,93 +147,136 @@ export default function CodingTestPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="h-screen flex flex-col bg-slate-100 overflow-hidden">
             <Toaster />
 
-            {/* Proctoring Monitor */}
+            {/* Proctoring Monitor (Fixed bottom right) */}
             <ProctorMonitor
                 testActive={testActive}
                 onViolation={handleViolation}
             />
 
-            <div className="p-6">
-                {/* Header */}
-                <div className="mb-6 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
-                            <Code2 className="h-6 w-6 text-indigo-600" />
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Coding Challenge</h1>
-                            <p className="text-sm text-gray-600">
-                                Difficulty: {question.difficulty === 1 ? 'Easy' : question.difficulty <= 3 ? 'Medium' : 'Hard'}
-                            </p>
-                        </div>
-                    </div>
+            {/* Top Header Bar */}
+            <div className="flex-shrink-0 bg-white border-b border-slate-200 px-6 py-3">
 
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg">
-                            <Clock className="h-4 w-4 text-gray-600" />
-                            <span className="font-semibold text-gray-900">{fmtTime(elapsedSec)}</span>
-                        </div>
-                    </div>
+                {/* Breadcrumbs */}
+                <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 mb-2 uppercase tracking-widest">
+                    <span className="cursor-pointer hover:text-slate-600" onClick={() => navigate('/coding-practice')}>Practice Problems</span>
+                    <span>›</span>
+                    <span className="text-orange-500">{question.title || 'Coding Challenge'}</span>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-140px)]">
-                    {/* Question Panel - Left Split */}
-                    <div className="rounded-xl border bg-white shadow-sm flex flex-col overflow-hidden h-full">
-                        <div className="p-4 border-b bg-gray-50 flex justify-between items-center">
-                            <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                                <Code2 className="h-5 w-5 text-indigo-600" />
-                                Problem Description
-                            </h2>
-                            <span className={`px-2 py-1 rounded text-xs font-semibold ${question.difficulty === 1 ? 'bg-green-100 text-green-700' :
-                                question.difficulty <= 3 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-                                }`}>
-                                {question.difficulty === 1 ? 'Easy' : question.difficulty <= 3 ? 'Medium' : 'Hard'}
-                            </span>
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-xl font-bold text-slate-900 tracking-tight">{question.title || 'Coding Challenge'}</h1>
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${question.difficulty === 1 ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                            : question.difficulty <= 3 ? 'bg-amber-100 text-amber-700 border border-amber-200'
+                                : 'bg-red-100 text-red-700 border border-red-200'
+                            }`}>
+                            {question.difficulty === 1 ? 'Easy' : question.difficulty <= 3 ? 'Medium' : 'Hard'}
+                        </span>
+                        <div className="flex items-center gap-1.5 text-sm text-slate-500">
+                            <Clock className="h-3.5 w-3.5" />
+                            <span className="font-mono font-semibold">{fmtTime(elapsedSec)}</span>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => navigate('/coding-practice')}
+                            className="flex items-center gap-2 px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-sm font-semibold transition-colors"
+                        >
+                            ← Back to List
+                        </button>
+                        <button
+                            className="flex items-center gap-2 px-4 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-full text-sm font-semibold transition-colors shadow-sm shadow-orange-500/20"
+                            onClick={() => toast('AI Hint coming soon!', { icon: '💡' })}
+                        >
+                            💡 AI Hint
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Split Pane */}
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2">
+                {/* Question Panel - Left */}
+                <div className="flex flex-col overflow-hidden border-r border-slate-200 bg-white">
+                    {/* Tabs */}
+                    <div className="flex border-b border-slate-100 px-2 sticky top-0 bg-white/80 backdrop-blur z-10">
+                        {['Description', 'Submissions', 'Solutions'].map((tab) => (
+                            <button
+                                key={tab}
+                                className={`px-4 py-3 text-sm font-bold transition-colors border-b-2 ${tab === 'Description' ? 'border-orange-500 text-slate-900' : 'border-transparent text-slate-400 hover:text-slate-700'}`}
+                                onClick={() => tab !== 'Description' && toast(`${tab} tab coming soon!`)}
+                            >
+                                {tab}
+                            </button>
+                        ))}
+                    </div>
+                    {/* Scrollable Description Area */}
+                    <div className="flex-1 overflow-y-auto p-6">
+                        <div className="prose prose-sm max-w-none">
+                            <p className="text-slate-700 whitespace-pre-wrap text-[14px] leading-relaxed">
+                                {question.description}
+                            </p>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-6">
-                            <div className="prose prose-sm max-w-none">
-                                <p className="text-gray-700 whitespace-pre-wrap font-medium text-base">{question.description}</p>
-                            </div>
-
-                            {/* Sample Test Cases */}
+                        {/* Sample Test Cases */}
+                        {question.test_cases?.filter(tc => !tc.hidden).length > 0 && (
                             <div className="mt-8">
-                                <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Example Test Cases</h3>
+                                <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Examples</h3>
                                 <div className="space-y-4">
                                     {question.test_cases.filter(tc => !tc.hidden).map((tc, idx) => (
-                                        <div key={idx} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                                            <div className="text-sm space-y-2">
+                                        <div key={idx} className="rounded-xl border border-slate-100 bg-slate-50 overflow-hidden">
+                                            <div className="px-4 py-2 border-b border-slate-100 bg-white">
+                                                <span className="text-xs font-bold text-orange-500">Example {idx + 1}</span>
+                                            </div>
+                                            <div className="p-4 font-mono text-[13px] space-y-2">
                                                 <div>
-                                                    <span className="font-semibold text-gray-700 block mb-1">Input:</span>
-                                                    <code className="px-2 py-1.5 bg-white rounded border border-gray-300 text-gray-800 block font-mono">
-                                                        {tc.input}
-                                                    </code>
+                                                    <span className="font-bold text-slate-500 mr-2">Input:</span>
+                                                    <code className="text-slate-800">{tc.input}</code>
                                                 </div>
                                                 <div>
-                                                    <span className="font-semibold text-gray-700 block mb-1">Output:</span>
-                                                    <code className="px-2 py-1.5 bg-white rounded border border-gray-300 text-gray-800 block font-mono">
-                                                        {tc.expected_output}
-                                                    </code>
+                                                    <span className="font-bold text-slate-500 mr-2">Output:</span>
+                                                    <code className="text-slate-800">{tc.expected_output}</code>
                                                 </div>
+                                                {tc.explanation && (
+                                                    <div className="pt-2 mt-2 border-t border-slate-200 text-slate-600 font-sans text-xs">
+                                                        <span className="font-bold">Explanation:</span> {tc.explanation}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             </div>
+                        )}
+
+                        {/* Constraints */}
+                        <div className="mt-8 mb-6">
+                            <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Constraints</h3>
+                            <ul className="list-disc pl-5 space-y-1.5 text-[13px] font-mono text-slate-600">
+                                {question.constraints?.map((c, i) => (
+                                    <li key={i}><code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800">{c}</code></li>
+                                )) || (
+                                        <>
+                                            <li><code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800">2 &lt;= nums.length &lt;= 10^4</code></li>
+                                            <li><code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800">-10^9 &lt;= nums[i] &lt;= 10^9</code></li>
+                                            <li className="font-sans italic text-slate-500">Only one valid answer exists.</li>
+                                        </>
+                                    )}
+                            </ul>
                         </div>
                     </div>
+                </div>
 
-                    {/* Code Editor Panel - Right Split */}
-                    <div className="h-full">
-                        <CodeEditor
-                            question={question}
-                            onSubmit={handleSubmit}
-                            readonly={!testActive}
-                        />
-                    </div>
+                {/* Code Editor Panel - Right */}
+                <div className="h-full">
+                    <CodeEditor
+                        question={question}
+                        onSubmit={handleSubmit}
+                        readonly={!testActive}
+                    />
                 </div>
             </div>
         </div>

@@ -25,10 +25,19 @@ export default function Test() {
 		else if (el && el.msRequestFullscreen) el.msRequestFullscreen()
 	}
 	function exitFullscreen() {
-		if (document.exitFullscreen) document.exitFullscreen()
-		else if (document.webkitExitFullscreen) document.webkitExitFullscreen()
-		else if (document.mozCancelFullScreen) document.mozCancelFullScreen()
-		else if (document.msExitFullscreen) document.msExitFullscreen()
+		// Only call exitFullscreen if the document is actually in fullscreen
+		if (!document.fullscreenElement &&
+			!document.webkitFullscreenElement &&
+			!document.mozFullScreenElement &&
+			!document.msFullscreenElement) return
+		try {
+			if (document.exitFullscreen) document.exitFullscreen().catch(() => { })
+			else if (document.webkitExitFullscreen) document.webkitExitFullscreen()
+			else if (document.mozCancelFullScreen) document.mozCancelFullScreen()
+			else if (document.msExitFullscreen) document.msExitFullscreen()
+		} catch (e) {
+			// Ignore - document may not be active
+		}
 	}
 	// When test becomes active (a question is present and active), go fullscreen
 	useEffect(() => {
@@ -347,7 +356,7 @@ export default function Test() {
 			<div className="flex min-h-[calc(100vh-200px)] items-center justify-center py-8">
 				<div className="w-full max-w-2xl">
 					<div className="text-center mb-8">
-						<div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-indigo-100 to-violet-100 mb-4">
+						<div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-orange-100 to-amber-100 mb-4">
 							<Award className="h-10 w-10 text-indigo-600" />
 						</div>
 						<h1 className="text-3xl font-bold text-gray-900">Test Complete!</h1>
@@ -394,7 +403,7 @@ export default function Test() {
 
 					{/* Gamification Rewards */}
 					{result.gamification && (
-						<div className="rounded-xl border bg-gradient-to-br from-indigo-50 to-purple-50 p-6 shadow-sm border-indigo-200 mb-6">
+						<div className="rounded-xl border bg-gradient-to-br from-orange-50 to-amber-50 p-6 shadow-sm border-orange-200 mb-6">
 							<h3 className="text-lg font-semibold text-indigo-900 mb-4 flex items-center gap-2">
 								<Sparkles className="h-5 w-5 text-indigo-600" />
 								Rewards Earned!

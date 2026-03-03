@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
+import Login from './pages/Login'
 import LandingPage from './pages/LandingPage'
 import Test from './pages/Test'
 import CodingTestPage from './pages/CodingTestPage'
@@ -45,22 +44,26 @@ export default function App() {
     const location = useLocation()
     const user = getCurrentUser()
 
-    // Hide global navbar on dashboard routes where Sidebar is present
-    const isDashboard = ['/student', '/admin', '/faculty'].some(path => location.pathname.startsWith(path))
-    const shouldShowNavbar = !isDashboard && !(location.pathname === '/' && !user)
+    // Hide global navbar on dashboard routes where Sidebar is present, and on auth pages
+    const isDashboard = [
+        '/student', '/admin', '/faculty',
+        '/coding-practice', '/test', '/gamified-assessment', '/games', '/analytics', '/leaderboard', '/learn'
+    ].some(path => location.pathname.startsWith(path))
+    const isAuthPage = ['/login', '/register'].includes(location.pathname)
+    const shouldShowNavbar = !isDashboard && !isAuthPage && !(location.pathname === '/' && !user)
 
     return (
-        <div className="min-h-screen font-sans text-gray-900">
+        <div className={isAuthPage ? "h-screen overflow-hidden font-sans text-gray-900" : "min-h-screen font-sans text-gray-900"}>
             {shouldShowNavbar && <Navbar />}
             <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<HomeOrRedirect />} />
-                    <Route path="/login" element={<Page><LoginPage /></Page>} />
-                    <Route path="/register" element={<Page><RegisterPage /></Page>} />
+                    <Route path="/login" element={<Page><Login defaultMode="login" /></Page>} />
+                    <Route path="/register" element={<Page><Login defaultMode="register" /></Page>} />
                     <Route path="/complete-profile" element={<CompleteProfile />} />
                     <Route path="/test" element={<Protected roles={['Student']}><StudentLayout><Test /></StudentLayout></Protected>} />
                     <Route path="/coding-practice" element={<Protected roles={['Student']}><StudentLayout><CodingProblemsPage /></StudentLayout></Protected>} />
-                    <Route path="/coding-practice/:id" element={<Protected roles={['Student']}><StudentLayout><CodingTestPage /></StudentLayout></Protected>} />
+                    <Route path="/coding-practice/:id" element={<Protected roles={['Student']}><CodingTestPage /></Protected>} />
                     <Route path="/leaderboard" element={<Protected roles={['Student']}><StudentLayout><LeaderboardPage /></StudentLayout></Protected>} />
                     <Route path="/gamified-assessment" element={<Protected roles={['Student']}><StudentLayout><GamifiedAssessment /></StudentLayout></Protected>} />
                     <Route path="/gamified-assessment/play/:modeId" element={<Protected roles={['Student']}><GameSession /></Protected>} />

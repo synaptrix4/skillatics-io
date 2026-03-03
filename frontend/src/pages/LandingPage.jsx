@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChart3, Users, Check, Menu, X, Rocket, Shield, Zap, Target, ArrowRight } from 'lucide-react';
+import { BarChart3, Users, Check, Menu, X, Rocket, Shield, Zap, Target, ArrowRight, BrainCircuit, Sparkles, Code2, ChevronLeft, ChevronRight, Lock, Globe, Trophy } from 'lucide-react';
 import Logo from '../components/Logo';
 
 // Main LandingPage Component
 export default function LandingPage() {
   return (
-    <div className="bg-white text-gray-900 font-sans selection:bg-primary-100 selection:text-primary-900">
+    <div className="bg-white min-h-screen text-slate-900 font-sans selection:bg-orange-500/30 selection:text-orange-900 overflow-x-hidden">
+      <AmbientBackground />
       <Header />
       <LandingPageContent />
       <Footer />
@@ -14,103 +15,136 @@ export default function LandingPage() {
   );
 }
 
+// --- AMBIENT GLOW BACKGROUND ---
+function AmbientBackground() {
+  return (
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-white">
+      {/* Main Top Center Sarvam Glow - Adjusted opacities for white bg */}
+      <div className="absolute top-[-30%] left-1/2 -translate-x-1/2 w-[80vw] h-[60vh] rounded-[100%] bg-orange-500/20 blur-[120px]" />
+      <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[40vw] h-[40vh] rounded-[100%] bg-amber-400/20 blur-[100px]" />
+      <div className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[60vw] h-[30vh] rounded-[100%] bg-orange-300/10 blur-[100px]" />
+
+      {/* Noise texture for premium feel */}
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05] mix-blend-overlay"></div>
+    </div>
+  );
+}
+
 // --- HEADER ---
 function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Simplified Nav for clarity - removing clutter
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const navItems = [
-    { name: 'How it Works', href: '#how-it-works' },
-    { name: 'For Students', href: '#audience' },
+    { name: 'Features', href: '#features' },
+    { name: 'Platform', href: '#platform' },
   ];
 
   return (
     <motion.header
-      className="fixed left-0 top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md"
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'py-4' : 'py-6'
+        }`}
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
-      <nav className="container-page flex items-center justify-between py-4">
-        {/* Logo */}
-        <a href="/" className="flex items-center gap-2 group">
-          <Logo className="h-9 w-auto" />
-          <span className="text-xl font-bold text-gray-900 tracking-tight">Skillatics</span>
-        </a>
+      <div className="container px-4 mx-auto md:px-6">
+        <nav className={`mx-auto max-w-5xl flex items-center justify-between rounded-full transition-all duration-500 ${isScrolled
+          ? 'bg-white/80 border border-slate-200/50 backdrop-blur-xl px-6 py-3 shadow-lg shadow-slate-200/50'
+          : 'bg-transparent px-2 py-2'
+          }`}>
+          {/* Logo */}
+          <a href="/" className="flex items-center gap-3 group relative z-10">
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-orange-400 to-amber-600 shadow-md shadow-orange-500/20">
+              <Logo className="h-5 w-auto text-white" />
+            </div>
+            <span className="text-xl font-semibold text-slate-900 tracking-tight">Skillatics</span>
+          </a>
 
-        {/* Desktop Nav */}
-        <div className="hidden items-center gap-8 md:flex">
-          {navItems.map((item) => (
+          {/* Desktop Nav */}
+          <div className="hidden items-center gap-8 md:flex">
+            {navItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900"
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+
+          {/* Desktop Auth Buttons */}
+          <div className="hidden items-center gap-4 md:flex">
             <a
-              key={item.name}
-              href={item.href}
-              className="text-sm font-medium text-gray-600 transition-colors hover:text-primary-600"
+              href="/login"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
             >
-              {item.name}
+              Sign In
             </a>
-          ))}
-        </div>
+            <a
+              href="/register"
+              className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-slate-900 px-5 py-2 text-sm font-medium text-white shadow-md transition-all duration-300 hover:bg-slate-800 hover:-translate-y-0.5 cursor-pointer"
+            >
+              <span className="relative flex items-center gap-2">
+                Get Started
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </a>
+          </div>
 
-        {/* Desktop Auth Buttons */}
-        <div className="hidden items-center gap-4 md:flex">
-          <a
-            href="/login"
-            className="text-sm font-medium text-gray-700 transition-colors hover:text-primary-600"
-          >
-            Log in
-          </a>
-          <a
-            href="/register"
-            className="rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary-600/20 transition-all hover:bg-primary-700 hover:shadow-xl hover:-translate-y-0.5"
-          >
-            Get Started
-          </a>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100"
-          >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-        </div>
-      </nav>
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="relative z-50 rounded-full p-2 text-slate-600 transition-colors hover:bg-slate-100"
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
+        </nav>
+      </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            className="absolute left-0 w-full border-b border-gray-200 bg-white shadow-xl md:hidden"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
+            className="fixed inset-0 z-40 bg-white/95 backdrop-blur-xl md:hidden flex flex-col items-center justify-center"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="flex flex-col space-y-4 p-6">
+            <div className="flex flex-col items-center space-y-8 p-6 w-full max-w-sm">
               {navItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-base font-medium text-gray-900"
+                  className="text-2xl font-semibold text-slate-600 hover:text-slate-900"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
                 </a>
               ))}
-              <hr className="border-gray-100" />
-              <div className="grid grid-cols-2 gap-4">
+              <div className="w-full h-px bg-slate-200 my-4" />
+              <div className="flex flex-col w-full gap-4">
                 <a
                   href="/login"
-                  className="flex items-center justify-center rounded-lg border border-gray-200 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                  className="flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 py-4 text-lg font-medium text-slate-700 hover:bg-slate-100"
                 >
-                  Log in
+                  Sign In
                 </a>
                 <a
                   href="/register"
-                  className="flex items-center justify-center rounded-lg bg-primary-600 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
+                  className="flex items-center justify-center rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 py-4 text-lg font-medium text-white hover:opacity-90 shadow-lg shadow-orange-500/20"
                 >
-                  sign Up
+                  Get Started
                 </a>
               </div>
             </div>
@@ -124,171 +158,90 @@ function Header() {
 function LandingPageContent() {
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
   };
 
   return (
-    <main className="relative overflow-hidden pt-20">
-      <AnimatedBg />
+    <main className="relative z-10 pt-32 pb-20">
 
       {/* Hero Section */}
-      <section className="container-page relative py-16 lg:py-24">
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 mb-32 pt-10">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="mx-auto max-w-4xl text-center"
+          className="mx-auto max-w-5xl text-center"
         >
-          {/* Badge */}
-          <motion.div variants={itemVariants} className="mb-6 flex justify-center">
-            <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-50 to-purple-50 px-3.5 py-1.5 text-xs font-semibold text-indigo-700 ring-1 ring-indigo-600/10">
-              <Zap className="h-3.5 w-3.5 text-indigo-600" />
-              AI-Powered Adaptive Learning
-            </span>
+          {/* Subtle Badge */}
+          <motion.div variants={itemVariants} className="mb-8 flex justify-center">
+            <div className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-orange-200/50 bg-orange-50/50 px-4 py-1.5 text-sm font-medium text-orange-700 backdrop-blur-md shadow-sm">
+              <span className="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-amber-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <Sparkles className="h-4 w-4 text-orange-500" />
+              <span>Next-Gen Assessment Engine</span>
+            </div>
           </motion.div>
 
-          {/* Main Heading with Gradient */}
+          {/* Main Heading */}
           <motion.h1
-            className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl mb-6 leading-tight"
+            className="text-5xl font-bold tracking-tight text-slate-900 sm:text-7xl mb-8 leading-[1.1]"
             variants={itemVariants}
           >
-            Master Your Skills with{' '}
-            <span className="text-gradient">Adaptive Intelligence</span>
+            Measure true potential with <br className="hidden sm:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-orange-600 to-amber-500 drop-shadow-[0_0_30px_rgba(251,146,60,0.2)]">
+              Adaptive Intelligence
+            </span>
           </motion.h1>
 
           {/* Subheading */}
           <motion.p
-            className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 mb-10"
+            className="mx-auto max-w-2xl text-lg sm:text-xl text-slate-600 leading-relaxed mb-12"
             variants={itemVariants}
           >
-            Real-time adaptive tests that adjust to your skill level. Get personalized insights,
-            track progress with gamification, and compete on leaderboards.
+            Skillatics provides an enterprise-grade platform for interactive coding assessments, real-time analytics, and personalized learning paths. Built for modern institutes.
           </motion.p>
 
-          {/* Trust Indicators */}
+          {/* CTA Buttons */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
           >
-            <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-green-500" />
-              <span>100% Free for Students</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-green-500" />
-              <span>AI-Generated Questions</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-green-500" />
-              <span>Real-Time Analytics</span>
-            </div>
-            <div className="mb-4 inline-flex items-center gap-2 font-bold text-lg">
-              <Logo className="h-6 w-auto" />
-              <span>Skillatics</span>
-            </div>
+            <a
+              href="/register"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-8 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-slate-800 hover:-translate-y-1 shadow-xl shadow-slate-900/20 cursor-pointer"
+            >
+              Start for free
+              <ArrowRight className="h-4 w-4" />
+            </a>
+            <a
+              href="#platform"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/80 px-8 py-3.5 text-sm font-semibold text-slate-700 backdrop-blur-xl transition-all duration-300 hover:bg-white hover:shadow-md hover:-translate-y-1 cursor-pointer"
+            >
+              Explore the Platform
+            </a>
           </motion.div>
         </motion.div>
       </section>
 
-      {/* How it Works Section */}
-      <section className="bg-gray-50 py-20" id="how-it-works">
-        <div className="container-page">
-          <div className="mx-auto max-w-2xl text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-4">
-              How <span className="text-gradient">Skillatics</span> Works
-            </h2>
-            <p className="text-lg text-gray-600">
-              Three simple steps to transform your learning journey
-            </p>
-          </div>
+      {/* Features Carousel Section */}
+      <FeatureCarousel />
 
-          <div className="grid md:grid-cols-3 gap-8 relative">
-            {/* Connector Line (Desktop) */}
-            <div className="hidden md:block absolute top-14 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-indigo-200 via-purple-300 to-pink-200 rounded-full"></div>
-
-            <StepCard
-              number="1"
-              title="Take Adaptive Tests"
-              desc="Smart AI adjusts question difficulty in real-time based on your performance."
-              icon={Target}
-              color="indigo"
-            />
-            <StepCard
-              number="2"
-              title="Get Instant Analysis"
-              desc="See exactly which topics are your strengths and where you need practice."
-              icon={BarChart3}
-              color="purple"
-            />
-            <StepCard
-              number="3"
-              title="Track & Excel"
-              desc="Earn XP, unlock achievements, and climb leaderboards while improving."
-              icon={Rocket}
-              color="pink"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Audience Section */}
-      <section className="py-20" id="audience">
-        <div className="container-page">
-          <div className="mx-auto max-w-2xl text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-4">
-              Built for <span className="text-gradient">Everyone</span>
-            </h2>
-            <p className="text-lg text-gray-600">
-              Tailored experiences for every role in the learning ecosystem
-            </p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-3">
-            <AudienceCardEnhanced
-              title="Students"
-              icon={Zap}
-              desc="Adaptive tests that match your skill level. Earn XP, unlock achievements, and compete on leaderboards."
-              gradient="from-yellow-400 to-orange-500"
-              features={["Personalized Tests", "XP & Badges", "Skill Analysis"]}
-            />
-            <AudienceCardEnhanced
-              title="Faculty"
-              icon={Rocket}
-              desc="Real-time batch analytics at your fingertips. Identify at-risk students and track cohort progress."
-              gradient="from-indigo-500 to-purple-600"
-              features={["Batch Analytics", "At-Risk Alerts", "Performance Tracking"]}
-            />
-            <AudienceCardEnhanced
-              title="Admins"
-              icon={Shield}
-              desc="Complete platform control with user management, AI question generation, and comprehensive dashboards."
-              gradient="from-green-500 to-emerald-600"
-              features={["User Management", "AI Gen Questions", "Full Control"]}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="container-page py-24">
-        <div className="relative isolate overflow-hidden bg-primary-900 px-6 py-24 text-center shadow-2xl rounded-3xl sm:px-16">
-          <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Ready to start learning smarter?
-          </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-primary-100">
-            Join the platform that is transforming how technical institutes assess and improve student skills.
-          </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
+      {/* Bottom CTA Element */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8" id="platform">
+        <div className="relative max-w-4xl mx-auto overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 to-amber-600 p-10 sm:p-16 text-center shadow-2xl shadow-orange-500/20">
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
+          <div className="relative z-10">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">Experience the future of assessment.</h2>
+            <p className="text-orange-100 mb-10 max-w-xl mx-auto text-lg">Join the ecosystem that bridges the gap between learning and institutional excellence.</p>
             <a
               href="/register"
-              className="rounded-xl bg-white px-8 py-3.5 text-sm font-bold text-primary-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-slate-900 transition-all duration-300 hover:bg-slate-50 hover:-translate-y-1 hover:shadow-2xl shadow-xl cursor-pointer"
             >
-              Get started
+              Join Skillatics Today
             </a>
           </div>
         </div>
@@ -297,100 +250,274 @@ function LandingPageContent() {
   );
 }
 
-// --- SUBCOMPONENTS ---
+// --- FEATURE CAROUSEL ---
+const featureCards = [
+  {
+    icon: BrainCircuit,
+    iconBg: 'bg-orange-100',
+    iconBorder: 'border-orange-200/50',
+    iconColor: 'text-orange-600',
+    accentHover: 'hover:border-orange-200/60',
+    accentGlow: 'from-orange-500/5',
+    tag: 'AI-Powered',
+    tagBg: 'bg-orange-50 text-orange-600 border-orange-200/50',
+    title: 'Adaptive & Interactive',
+    description:
+      'Our AI dynamically modifies test difficulty in real-time. Students write code in structured function templates and receive millisecond assessments instantly.',
+  },
+  {
+    icon: BarChart3,
+    iconBg: 'bg-amber-100',
+    iconBorder: 'border-amber-200/50',
+    iconColor: 'text-amber-600',
+    accentHover: 'hover:border-amber-200/60',
+    accentGlow: 'from-amber-500/5',
+    tag: 'Analytics',
+    tagBg: 'bg-amber-50 text-amber-600 border-amber-200/50',
+    title: 'Deep Analytics',
+    description:
+      'Granular insights for admins and faculty. Track precision, speed, cheating probability, and cohort averages — all in one real-time dashboard.',
+  },
+  {
+    icon: Shield,
+    iconBg: 'bg-blue-100',
+    iconBorder: 'border-blue-200/50',
+    iconColor: 'text-blue-600',
+    accentHover: 'hover:border-blue-200/60',
+    accentGlow: 'from-blue-500/5',
+    tag: 'Security',
+    tagBg: 'bg-blue-50 text-blue-600 border-blue-200/50',
+    title: 'Secure Ecosystem',
+    description:
+      'Protected by JWT tokens, isolated sandbox execution, and strict role-based access controls to keep assessments tamper-proof.',
+  },
+  {
+    icon: Code2,
+    iconBg: 'bg-emerald-100',
+    iconBorder: 'border-emerald-200/50',
+    iconColor: 'text-emerald-600',
+    accentHover: 'hover:border-emerald-200/60',
+    accentGlow: 'from-emerald-500/5',
+    tag: 'Multi-Language',
+    tagBg: 'bg-emerald-50 text-emerald-600 border-emerald-200/50',
+    title: 'Multi-Language Support',
+    description:
+      'Write solutions in Python, JavaScript, C++, and Java — all with universal test integration and consistent evaluation across languages.',
+  },
+  {
+    icon: Target,
+    iconBg: 'bg-rose-100',
+    iconBorder: 'border-rose-200/50',
+    iconColor: 'text-rose-600',
+    accentHover: 'hover:border-rose-200/60',
+    accentGlow: 'from-rose-500/5',
+    tag: 'Gamification',
+    tagBg: 'bg-rose-50 text-rose-600 border-rose-200/50',
+    title: 'Engaging Tracks',
+    description:
+      'Gamified progress bars, dynamic leaderboards, and instant achievement feedback keep students motivated throughout their learning journey.',
+  },
+  {
+    icon: Users,
+    iconBg: 'bg-violet-100',
+    iconBorder: 'border-violet-200/50',
+    iconColor: 'text-violet-600',
+    accentHover: 'hover:border-violet-200/60',
+    accentGlow: 'from-violet-500/5',
+    tag: 'Collaboration',
+    tagBg: 'bg-violet-50 text-violet-600 border-violet-200/50',
+    title: 'Role-Based Portals',
+    description:
+      'Dedicated dashboards for students, faculty, and admins. Each role gets a tailored experience to maximize productivity and oversight.',
+  },
+  {
+    icon: Zap,
+    iconBg: 'bg-yellow-100',
+    iconBorder: 'border-yellow-200/50',
+    iconColor: 'text-yellow-600',
+    accentHover: 'hover:border-yellow-200/60',
+    accentGlow: 'from-yellow-500/5',
+    tag: 'Performance',
+    tagBg: 'bg-yellow-50 text-yellow-600 border-yellow-200/50',
+    title: 'Lightning Fast',
+    description:
+      '99% uptime with sub-10ms latency. Built on a robust backend infrastructure ensuring assessments run smoothly even at massive scale.',
+  },
+];
 
-function StepCard({ number, title, desc, icon: Icon, color }) {
-  const colorClasses = {
-    indigo: 'from-indigo-500 to-indigo-600 group-hover:from-indigo-600 group-hover:to-indigo-700',
-    purple: 'from-purple-500 to-purple-600 group-hover:from-purple-600 group-hover:to-purple-700',
-    pink: 'from-pink-500 to-pink-600 group-hover:from-pink-600 group-hover:to-pink-700'
+function FeatureCarousel() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const total = featureCards.length;
+
+  const goTo = useCallback(
+    (index, dir) => {
+      setDirection(dir);
+      setCurrentIndex((index + total) % total);
+    },
+    [total]
+  );
+
+  const prev = () => goTo(currentIndex - 1, -1);
+  const next = useCallback(() => goTo(currentIndex + 1, 1), [currentIndex, goTo]);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(next, 4000);
+    return () => clearInterval(timer);
+  }, [isPaused, next]);
+
+  const variants = {
+    enter: (dir) => ({ x: dir > 0 ? 80 : -80, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir) => ({ x: dir > 0 ? -80 : 80, opacity: 0 }),
   };
 
+  // Show 3 visible cards centered on currentIndex
+  const getVisibleIndices = () => {
+    return [-1, 0, 1].map((offset) => (currentIndex + offset + total) % total);
+  };
+
+  const visibleIndices = getVisibleIndices();
+
   return (
-    <div className="group relative flex flex-col items-center text-center animate-fade-in hover-lift">
-      {/* Number Badge */}
-      <div className={`relative flex h-20 w-20 items-center justify-center rounded-xl bg-gradient-to-br ${colorClasses[color]} shadow-lg z-10 mb-6 transition-all duration-300`}>
-        <span className="text-3xl font-bold text-white">
-          {number}
-        </span>
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    <section className="container mx-auto px-4 sm:px-6 lg:px-8 mb-32" id="features">
+      {/* Section Header */}
+      <div className="text-center mb-14">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="inline-flex items-center gap-2 rounded-full border border-orange-200/50 bg-orange-50/50 px-4 py-1.5 text-sm font-medium text-orange-700 mb-5">
+            <Sparkles className="h-3.5 w-3.5 text-orange-500" />
+            Everything you need
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 tracking-tight">
+            Built for modern assessment
+          </h2>
+          <p className="text-slate-500 max-w-xl mx-auto text-base">
+            A complete ecosystem for institutes — from AI-adaptive tests to granular analytics.
+          </p>
+        </motion.div>
       </div>
 
-      {/* Icon */}
-      <div className="mb-3">
-        <Icon className="h-8 w-8 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+      {/* Carousel */}
+      <div
+        className="relative max-w-5xl mx-auto"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        {/* Cards Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-stretch">
+          {visibleIndices.map((cardIdx, position) => {
+            const card = featureCards[cardIdx];
+            const Icon = card.icon;
+            const isCenter = position === 1;
+
+            return (
+              <motion.div
+                key={cardIdx}
+                layout
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: position * 0.06 }}
+                className={`group relative overflow-hidden rounded-3xl border bg-white/60 backdrop-blur-xl p-8 shadow-sm transition-all duration-300
+                  ${isCenter
+                    ? `${card.accentHover} shadow-md scale-[1.02] border-gray-200/80 bg-white/90`
+                    : `border-gray-200/50 hover:shadow-md ${card.accentHover} opacity-75 hover:opacity-100`
+                  }`}
+              >
+                {/* Glow overlay on hover */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${card.accentGlow} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+
+                <div className="relative z-10 flex flex-col h-full">
+                  {/* Tag */}
+                  <span className={`self-start mb-5 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold tracking-wide ${card.tagBg}`}>
+                    {card.tag}
+                  </span>
+
+                  {/* Icon */}
+                  <div className={`h-12 w-12 rounded-2xl ${card.iconBg} flex items-center justify-center mb-5 border ${card.iconBorder}`}>
+                    <Icon className={`h-6 w-6 ${card.iconColor}`} />
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">{card.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed flex-grow">{card.description}</p>
+
+                  {/* Bottom arrow hint */}
+                  <div className={`mt-6 flex items-center gap-1.5 text-xs font-semibold ${card.iconColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}>
+                    Learn more <ArrowRight className="h-3.5 w-3.5" />
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Prev / Next Arrows */}
+        <button
+          onClick={prev}
+          className="absolute -left-5 top-1/2 -translate-y-1/2 hidden sm:flex h-10 w-10 items-center justify-center rounded-full bg-white border border-slate-200 shadow-md text-slate-600 hover:text-slate-900 hover:shadow-lg transition-all duration-200 hover:scale-105 z-20"
+          aria-label="Previous feature"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <button
+          onClick={next}
+          className="absolute -right-5 top-1/2 -translate-y-1/2 hidden sm:flex h-10 w-10 items-center justify-center rounded-full bg-white border border-slate-200 shadow-md text-slate-600 hover:text-slate-900 hover:shadow-lg transition-all duration-200 hover:scale-105 z-20"
+          aria-label="Next feature"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
       </div>
 
-      {/* Content */}
-      <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
-      <p className="text-gray-600 leading-relaxed text-sm">{desc}</p>
-    </div>
-  );
-}
-
-function AudienceCard({ title, icon: Icon, desc }) {
-  return (
-    <div className="group rounded-2xl bg-white p-8 shadow-sm ring-1 ring-gray-200 transition-all hover:shadow-xl hover:-translate-y-1">
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors">
-        <Icon className="h-6 w-6" />
-      </div>
-      <h3 className="mt-6 text-xl font-bold text-gray-900">{title}</h3>
-      <p className="mt-4 text-gray-600 leading-relaxed">{desc}</p>
-    </div>
-  );
-}
-
-function AudienceCardEnhanced({ title, icon: Icon, desc, gradient, features }) {
-  return (
-    <div className="group relative rounded-2xl bg-white p-6 shadow-md ring-1 ring-gray-200/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 overflow-hidden">
-      {/* Gradient Background on Hover */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
-
-      {/* Icon with Gradient */}
-      <div className={`relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-white shadow-lg group-hover:scale-105 transition-transform duration-300 mb-5`}>
-        <Icon className="h-6 w-6" />
-      </div>
-
-      {/* Content */}
-      <h3 className="relative text-xl font-bold text-gray-900 mb-3">{title}</h3>
-      <p className="relative text-gray-600 leading-relaxed text-sm mb-5">{desc}</p>
-
-      {/* Features List */}
-      <div className="relative space-y-2.5">
-        {features.map((feature, idx) => (
-          <div key={idx} className="flex items-center gap-2">
-            <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-            <span className="text-xs font-medium text-gray-700">{feature}</span>
-          </div>
+      {/* Dot Navigation */}
+      <div className="flex items-center justify-center gap-2 mt-10">
+        {featureCards.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i, i > currentIndex ? 1 : -1)}
+            className={`transition-all duration-300 rounded-full ${i === currentIndex
+              ? 'w-6 h-2 bg-orange-500'
+              : 'w-2 h-2 bg-slate-300 hover:bg-slate-400'
+              }`}
+            aria-label={`Go to feature ${i + 1}`}
+          />
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
-function AnimatedBg() {
-  return (
-    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-white">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-primary-50/50 to-transparent rounded-[100%] blur-3xl opacity-60" />
-    </div>
-  );
-}
-
+// --- FOOTER ---
 function Footer() {
   return (
-    <footer className="border-t border-gray-100 bg-white">
-      <div className="container-page py-12">
-        <div className="flex flex-col items-center justify-between sm:flex-row gap-6">
-          <div className="flex items-center gap-3">
-            <Logo className="h-8 w-auto" />
-            <span className="text-lg font-bold text-gray-900">Skillatics</span>
+    <footer className="relative z-10 border-t border-slate-200 bg-white mt-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3 opacity-80 hover:opacity-100 transition-opacity">
+            <div className="relative flex h-6 w-6 items-center justify-center rounded bg-gradient-to-br from-orange-400 to-amber-600">
+              <Logo className="h-4 w-auto text-white" />
+            </div>
+            <span className="text-sm font-bold text-slate-900 tracking-widest uppercase">Skillatics</span>
           </div>
-          <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} Skillatics Adaptive Learning. All rights reserved.
+
+          <div className="flex gap-6 text-sm font-medium text-slate-500">
+            <a href="#" className="hover:text-slate-900 transition-colors">Privacy</a>
+            <a href="#" className="hover:text-slate-900 transition-colors">Terms</a>
+            <a href="#" className="hover:text-slate-900 transition-colors">Contact</a>
+          </div>
+
+          <p className="text-sm text-slate-500 font-medium">
+            © {new Date().getFullYear()} Skillatics Engine.
           </p>
         </div>
       </div>
     </footer>
   );
 }
-

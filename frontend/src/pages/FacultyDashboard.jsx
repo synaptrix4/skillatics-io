@@ -37,8 +37,8 @@ export default function FacultyDashboard() {
     if (loading && !data) return (
         <div className="flex min-h-[60vh] items-center justify-center">
             <div className="text-center">
-                <Loader2 className="mx-auto h-12 w-12 animate-spin text-indigo-600" />
-                <p className="mt-4 text-gray-600">Loading analytics...</p>
+                <Loader2 className="mx-auto h-12 w-12 animate-spin text-orange-600" />
+                <p className="mt-4 text-slate-600">Loading analytics...</p>
             </div>
         </div>
     )
@@ -55,31 +55,32 @@ export default function FacultyDashboard() {
     return (
         <div className="space-y-8">
             {/* Header / Hero */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 to-purple-600 p-8 shadow-xl">
-                <div className="relative z-10">
-                    <h1 className="text-3xl font-bold text-white">{me.role === 'TPO' ? 'TPO Executive Dashboard' : 'Faculty Dashboard'}</h1>
-                    <p className="mt-2 text-indigo-100">Monitor and analyze performance metrics for {me.role === 'TPO' ? 'the entire college' : 'your department'}.</p>
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 to-amber-600 p-8 shadow-xl shadow-orange-500/20">
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
+                <div className="relative z-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+                    <h1 className="text-3xl font-bold text-white">Faculty Overview</h1>
+                    <p className="mt-2 text-orange-100">Here's what your students are achieving today.</p>
                 </div>
                 {/* Decorative Circles */}
-                <div className="absolute right-0 top-0 h-64 w-64 translate-x-12 -translate-y-12 rounded-full bg-white/10 blur-3xl" />
-                <div className="absolute bottom-0 left-0 h-32 w-32 -translate-x-8 translate-y-8 rounded-full bg-white/10 blur-2xl" />
+                <div className="absolute -right-12 -top-12 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+                <div className="absolute -bottom-12 -left-12 h-48 w-48 rounded-full bg-orange-400/20 blur-2xl" />
             </div>
 
             {/* Filters */}
             <div className="glass-card rounded-2xl p-6">
                 <div className="flex items-center gap-2 mb-6">
-                    <div className="rounded-lg bg-gray-100 p-2">
-                        <Filter className="h-5 w-5 text-gray-700" />
+                    <div className="rounded-lg bg-slate-100 p-2">
+                        <Filter className="h-5 w-5 text-slate-700" />
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900">Advanced Filters</h3>
+                    <h3 className="text-lg font-bold text-slate-900">Advanced Filters</h3>
                 </div>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                     {me.role === 'TPO' && (
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Scope</label>
+                            <label className="text-sm font-semibold text-slate-700">Scope</label>
                             <div className="relative">
                                 <select
-                                    className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-gray-700 shadow-sm transition-all hover:border-indigo-300 focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
+                                    className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition-all hover:border-orange-300 focus:border-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-500/10"
                                     value={scope}
                                     onChange={e => setScope(e.target.value)}
                                 >
@@ -92,10 +93,10 @@ export default function FacultyDashboard() {
                     )}
                     {(me.role === 'TPO' && (scope === 'department' || scope === 'division')) && (
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Department</label>
+                            <label className="text-sm font-semibold text-slate-700">Department</label>
                             <div className="relative">
                                 <select
-                                    className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-gray-700 shadow-sm transition-all hover:border-indigo-300 focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
+                                    className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition-all hover:border-orange-300 focus:border-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-500/10"
                                     value={department}
                                     onChange={e => setDepartment(e.target.value)}
                                 >
@@ -122,9 +123,9 @@ export default function FacultyDashboard() {
                     )}
                     {(me.role === 'TPO' && scope === 'division') && (
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Division</label>
+                            <label className="text-sm font-semibold text-slate-700">Division</label>
                             <input
-                                className="w-full rounded-xl border border-gray-200 px-4 py-2.5 shadow-sm transition-all hover:border-indigo-300 focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
+                                className="w-full rounded-xl border border-slate-200 px-4 py-2.5 shadow-sm transition-all hover:border-orange-300 focus:border-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-500/10"
                                 value={division}
                                 onChange={e => setDivision(e.target.value)}
                                 placeholder="e.g. A"
@@ -133,9 +134,9 @@ export default function FacultyDashboard() {
                     )}
                     {me.role === 'Faculty' && (
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Division (Optional)</label>
+                            <label className="text-sm font-semibold text-slate-700">Division (Optional)</label>
                             <input
-                                className="w-full rounded-xl border border-gray-200 px-4 py-2.5 shadow-sm transition-all hover:border-indigo-300 focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
+                                className="w-full rounded-xl border border-slate-200 px-4 py-2.5 shadow-sm transition-all hover:border-orange-300 focus:border-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-500/10"
                                 value={division}
                                 onChange={e => setDivision(e.target.value)}
                                 placeholder="e.g. A, B, C"
@@ -143,10 +144,10 @@ export default function FacultyDashboard() {
                         </div>
                     )}
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Year of Study</label>
+                        <label className="text-sm font-semibold text-slate-700">Year of Study</label>
                         <div className="relative">
                             <select
-                                className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-gray-700 shadow-sm transition-all hover:border-indigo-300 focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
+                                className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition-all hover:border-orange-300 focus:border-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-500/10"
                                 value={yearOfStudy}
                                 onChange={e => setYearOfStudy(e.target.value)}
                             >
@@ -165,24 +166,24 @@ export default function FacultyDashboard() {
                 <div className="glass-card rounded-2xl p-6 hover-scale">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-500">Average Score</p>
-                            <p className="mt-2 text-3xl font-bold text-gray-900">{Math.round((data?.avgScore || 0) * 100) / 100}%</p>
+                            <p className="text-sm font-medium text-slate-500">Average Score</p>
+                            <p className="mt-2 text-3xl font-bold text-slate-900">{Math.round((data?.avgScore || 0) * 100) / 100}%</p>
                         </div>
-                        <div className="rounded-xl bg-indigo-50 p-3">
-                            <TrendingUp className="h-6 w-6 text-indigo-600" />
+                        <div className="rounded-xl bg-orange-50 p-3 shadow-inner">
+                            <TrendingUp className="h-6 w-6 text-orange-600" />
                         </div>
                     </div>
                 </div>
                 <div className="glass-card rounded-2xl p-6 hover-scale">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-500">At-Risk Students</p>
+                            <p className="text-sm font-medium text-slate-500">At-Risk Students</p>
                             <p className="mt-2 text-3xl font-bold text-red-600">
                                 {students.filter(s => (s.avgScore || 0) < 40).length}
                             </p>
                             <p className="text-xs text-red-400 mt-1">Avg Score &lt; 40%</p>
                         </div>
-                        <div className="rounded-xl bg-red-50 p-3">
+                        <div className="rounded-xl bg-red-50 p-3 shadow-inner">
                             <Target className="h-6 w-6 text-red-600" />
                         </div>
                     </div>
@@ -190,21 +191,21 @@ export default function FacultyDashboard() {
                 <div className="glass-card rounded-2xl p-6 hover-scale">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-500">Avg Correct</p>
-                            <p className="mt-2 text-3xl font-bold text-gray-900">{Math.round((data?.avgCorrect || 0) * 100) / 100}</p>
+                            <p className="text-sm font-medium text-slate-500">Avg Correct</p>
+                            <p className="mt-2 text-3xl font-bold text-slate-900">{Math.round((data?.avgCorrect || 0) * 100) / 100}</p>
                         </div>
-                        <div className="rounded-xl bg-yellow-50 p-3">
-                            <Award className="h-6 w-6 text-yellow-600" />
+                        <div className="rounded-xl bg-amber-50 p-3 shadow-inner">
+                            <Award className="h-6 w-6 text-amber-600" />
                         </div>
                     </div>
                 </div>
                 <div className="glass-card rounded-2xl p-6 hover-scale">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-500">Active Students</p>
-                            <p className="mt-2 text-3xl font-bold text-gray-900">{students.length}</p>
+                            <p className="text-sm font-medium text-slate-500">Active Students</p>
+                            <p className="mt-2 text-3xl font-bold text-slate-900">{students.length}</p>
                         </div>
-                        <div className="rounded-xl bg-blue-50 p-3">
+                        <div className="rounded-xl bg-blue-50 p-3 shadow-inner">
                             <Users className="h-6 w-6 text-blue-600" />
                         </div>
                     </div>
@@ -213,16 +214,22 @@ export default function FacultyDashboard() {
 
             {/* Charts Section */}
             <div className="grid gap-8 lg:grid-cols-2">
-                <div className="glass-card rounded-2xl p-8">
-                    <h3 className="text-lg font-bold text-gray-900">Batch Metrics</h3>
-                    <p className="text-sm text-gray-500">Overall performance indicators</p>
+                <div className="glass-card rounded-2xl p-8 border border-slate-200">
+                    <h3 className="text-lg font-bold text-slate-900">Batch Metrics</h3>
+                    <p className="text-sm text-slate-500">Overall performance indicators</p>
                     <div className="mt-8 h-[300px]">
-                        <Bar data={chartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+                        <Bar data={{
+                            ...chartData,
+                            datasets: [{
+                                ...chartData.datasets[0],
+                                backgroundColor: ['#f97316', '#22c55e', '#f59e0b', '#06b6d4'] // updated blue to orange
+                            }]
+                        }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
                     </div>
                 </div>
-                <div className="glass-card rounded-2xl p-8">
-                    <h3 className="text-lg font-bold text-gray-900">Score Distribution</h3>
-                    <p className="text-sm text-gray-500">Student performance spread</p>
+                <div className="glass-card rounded-2xl p-8 border border-slate-200">
+                    <h3 className="text-lg font-bold text-slate-900">Score Distribution</h3>
+                    <p className="text-sm text-slate-500">Student performance spread</p>
                     <div className="mt-8 h-[300px]">
                         <Bar
                             data={{
@@ -246,29 +253,29 @@ export default function FacultyDashboard() {
             </div>
 
             {/* Student Table */}
-            <div className="glass-card rounded-2xl overflow-hidden">
-                <div className="border-b border-gray-100 bg-gray-50/50 px-6 py-4">
-                    <h3 className="text-lg font-bold text-gray-900">Student Performance</h3>
-                    <p className="text-sm text-gray-500">Detailed list of student statistics</p>
+            <div className="glass-card rounded-2xl overflow-hidden border border-slate-200">
+                <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+                    <h3 className="text-lg font-bold text-slate-900">Student Performance</h3>
+                    <p className="text-sm text-slate-500">Detailed list of student statistics</p>
                 </div>
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-100">
-                        <thead className="bg-gray-50/50">
+                    <table className="min-w-full divide-y divide-slate-100">
+                        <thead className="bg-slate-50/50">
                             <tr>
-                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Student</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Email</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Year</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Tests Taken</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Avg Score</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Last Active</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Student</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Email</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Year</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Tests Taken</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Avg Score</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Last Active</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100 bg-white">
+                        <tbody className="divide-y divide-slate-100 bg-white">
                             {students.length === 0 ? (
                                 <tr>
                                     <td colSpan={6} className="px-6 py-12 text-center">
-                                        <Users className="mx-auto h-12 w-12 text-gray-400" />
-                                        <p className="mt-2 text-sm text-gray-500">No student data found matching filters</p>
+                                        <Users className="mx-auto h-12 w-12 text-slate-400" />
+                                        <p className="mt-2 text-sm text-slate-500">No student data found matching filters</p>
                                     </td>
                                 </tr>
                             ) : (
@@ -276,29 +283,29 @@ export default function FacultyDashboard() {
                                     <tr key={s.studentId} className="hover:bg-gray-50/80 transition-colors">
                                         <td className="whitespace-nowrap px-6 py-4">
                                             <div className="flex items-center">
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 font-bold text-white shadow-sm">
+                                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 font-bold text-white shadow-sm">
                                                     {s.name?.charAt(0)?.toUpperCase() || 'S'}
                                                 </div>
                                                 <div className="ml-4">
-                                                    <div className="font-semibold text-gray-900">{s.name || 'Unknown'}</div>
+                                                    <div className="font-semibold text-slate-900">{s.name || 'Unknown'}</div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{s.email || '—'}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{s.email || '—'}</td>
                                         <td className="whitespace-nowrap px-6 py-4">
-                                            <span className="inline-flex rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+                                            <span className="inline-flex rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-800">
                                                 {s.yearOfStudy || 'N/A'}
                                             </span>
                                         </td>
                                         <td className="whitespace-nowrap px-6 py-4">
-                                            <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 border border-blue-100">
+                                            <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-medium text-orange-700 border border-orange-100">
                                                 {s.tests || 0} tests
                                             </span>
                                         </td>
                                         <td className="whitespace-nowrap px-6 py-4">
-                                            <div className="font-bold text-gray-900">{Math.round((s.avgScore || 0) * 100) / 100}%</div>
+                                            <div className="font-bold text-slate-900">{Math.round((s.avgScore || 0) * 100) / 100}%</div>
                                         </td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                                             {s.lastCompleted ? new Date(s.lastCompleted).toLocaleDateString() : '—'}
                                         </td>
                                     </tr>

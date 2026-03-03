@@ -59,14 +59,15 @@ export default function AdminDashboard() {
     return (
         <div className="space-y-8">
             {/* Header / Hero */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-gray-900 to-gray-800 p-8 shadow-xl">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 to-amber-600 p-8 shadow-xl shadow-orange-500/20">
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
                 <div className="relative z-10">
                     <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-                    <p className="mt-2 text-gray-300">System overview, user management, and platform configuration.</p>
+                    <p className="mt-2 text-slate-200">System overview, user management, and platform configuration.</p>
                 </div>
                 {/* Decorative Circles */}
-                <div className="absolute right-0 top-0 h-64 w-64 translate-x-12 -translate-y-12 rounded-full bg-indigo-500/20 blur-3xl" />
-                <div className="absolute bottom-0 left-0 h-32 w-32 -translate-x-8 translate-y-8 rounded-full bg-purple-500/20 blur-2xl" />
+                <div className="absolute right-0 top-0 h-64 w-64 translate-x-12 -translate-y-12 rounded-full bg-slate-500/20 blur-3xl" />
+                <div className="absolute bottom-0 left-0 h-32 w-32 -translate-x-8 translate-y-8 rounded-full bg-orange-400/20 blur-2xl" />
             </div>
 
             {/* Stats Grid */}
@@ -75,13 +76,13 @@ export default function AdminDashboard() {
                     <div key={idx} className="glass-card rounded-2xl p-6 hover-scale group">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-500">{stat.label}</p>
-                                <p className="mt-2 text-3xl font-bold text-gray-900">{loading ? '—' : stat.value}</p>
+                                <p className="text-sm font-medium text-slate-500">{stat.label}</p>
+                                <p className="mt-2 text-3xl font-bold text-slate-900">{loading ? '—' : stat.value}</p>
                             </div>
                             <div className={`rounded-xl p-3 transition-colors ${stat.color === 'indigo' ? 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-100' :
-                                    stat.color === 'violet' ? 'bg-violet-50 text-violet-600 group-hover:bg-violet-100' :
-                                        stat.color === 'blue' ? 'bg-blue-50 text-blue-600 group-hover:bg-blue-100' :
-                                            'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100'
+                                stat.color === 'violet' ? 'bg-violet-50 text-violet-600 group-hover:bg-violet-100' :
+                                    stat.color === 'blue' ? 'bg-blue-50 text-blue-600 group-hover:bg-blue-100' :
+                                        'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100'
                                 }`}>
                                 <stat.icon className="h-6 w-6" />
                             </div>
@@ -92,8 +93,8 @@ export default function AdminDashboard() {
 
             {/* Quick Actions */}
             <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5 text-indigo-600" />
+                <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-orange-600" />
                     Quick Actions
                 </h2>
                 <div className="grid gap-6 lg:grid-cols-3">
@@ -105,20 +106,20 @@ export default function AdminDashboard() {
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div className={`rounded-xl p-3 ${action.color === 'indigo' ? 'bg-indigo-50 text-indigo-600' :
-                                        action.color === 'violet' ? 'bg-violet-50 text-violet-600' :
-                                            'bg-blue-50 text-blue-600'
+                                    action.color === 'violet' ? 'bg-violet-50 text-violet-600' :
+                                        'bg-blue-50 text-blue-600'
                                     }`}>
                                     <action.icon className="h-6 w-6" />
                                 </div>
                                 {action.count !== null && (
-                                    <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-600 shadow-sm border border-gray-100">
+                                    <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 shadow-sm border border-slate-100">
                                         {action.count}
                                     </span>
                                 )}
                             </div>
-                            <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">{action.title}</h3>
-                            <p className="text-sm text-gray-500 mb-6">{action.description}</p>
-                            <div className="flex items-center text-sm font-semibold text-indigo-600">
+                            <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-orange-600 transition-colors">{action.title}</h3>
+                            <p className="text-sm text-slate-500 mb-6">{action.description}</p>
+                            <div className="flex items-center text-sm font-semibold text-orange-600">
                                 Manage
                                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                             </div>
@@ -129,13 +130,13 @@ export default function AdminDashboard() {
 
             {/* Recent Users */}
             <div className="glass-card rounded-2xl overflow-hidden">
-                <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 px-6 py-4">
+                <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 px-6 py-4">
                     <div>
-                        <h2 className="text-lg font-bold text-gray-900">Recent Registrations</h2>
-                        <p className="text-sm text-gray-500">Latest users joining the platform</p>
+                        <h2 className="text-lg font-bold text-slate-900">Recent Registrations</h2>
+                        <p className="text-sm text-slate-500">Latest users joining the platform</p>
                     </div>
                     <Link
-                        className="inline-flex items-center gap-2 rounded-lg bg-white border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900 shadow-sm"
+                        className="inline-flex items-center gap-2 rounded-lg bg-white border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-900 shadow-sm"
                         to="/admin/manage-users"
                     >
                         View All Users
@@ -143,40 +144,40 @@ export default function AdminDashboard() {
                     </Link>
                 </div>
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-100">
-                        <thead className="bg-gray-50/50">
+                    <table className="min-w-full divide-y divide-slate-100">
+                        <thead className="bg-slate-50/50">
                             <tr>
-                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">User</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Email</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Role</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Department</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">User</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Email</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Role</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Department</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100 bg-white">
+                        <tbody className="divide-y divide-slate-100 bg-white">
                             {users.slice(0, 8).map(u => (
-                                <tr key={u._id} className="hover:bg-gray-50/80 transition-colors">
+                                <tr key={u._id} className="hover:bg-slate-50/80 transition-colors">
                                     <td className="whitespace-nowrap px-6 py-4">
                                         <div className="flex items-center">
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-600 font-bold">
+                                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600 font-bold">
                                                 {u.name?.charAt(0)?.toUpperCase() || 'U'}
                                             </div>
                                             <div className="ml-4">
-                                                <div className="font-semibold text-gray-900">{u.name || 'Unnamed'}</div>
+                                                <div className="font-semibold text-slate-900">{u.name || 'Unnamed'}</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{u.email}</td>
+                                    <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{u.email}</td>
                                     <td className="whitespace-nowrap px-6 py-4">
                                         <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${roleColors[u.role] || 'bg-gray-100 text-gray-700'}`}>
                                             {u.role}
                                         </span>
                                     </td>
-                                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{u.department || '—'}</td>
+                                    <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">{u.department || '—'}</td>
                                 </tr>
                             ))}
                             {users.length === 0 && (
                                 <tr>
-                                    <td colSpan={4} className="px-6 py-12 text-center text-sm text-gray-500">
+                                    <td colSpan={4} className="px-6 py-12 text-center text-sm text-slate-500">
                                         No users registered yet
                                     </td>
                                 </tr>

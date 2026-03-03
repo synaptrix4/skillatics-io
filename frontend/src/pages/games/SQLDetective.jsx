@@ -136,33 +136,39 @@ export default function SQLDetective() {
 
     if (solved) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 text-white p-8">
+            <div className="min-h-screen bg-slate-50 text-slate-900 p-8 flex items-center justify-center relative overflow-hidden">
+                {/* Decorative background blobs */}
+                <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+                    <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-200/40 blur-3xl"></div>
+                    <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-200/40 blur-3xl"></div>
+                </div>
+
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     className="max-w-2xl mx-auto text-center"
                 >
-                    <CheckCircle className="h-32 w-32 text-green-400 mx-auto mb-6" />
-                    <h1 className="text-5xl font-black mb-4">Case Closed!</h1>
-                    <p className="text-xl text-indigo-200 mb-6">
+                    <CheckCircle className="h-32 w-32 text-emerald-500 mx-auto mb-6 drop-shadow-md" />
+                    <h1 className="text-5xl font-black mb-4 text-slate-900">Case Closed!</h1>
+                    <p className="text-xl text-slate-600 font-medium mb-6">
                         You successfully identified Prof. David Kim as the culprit using your SQL detective skills!
                     </p>
-                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8">
-                        <h3 className="font-bold text-2xl mb-4">Your Performance</h3>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <div className="text-3xl font-black text-yellow-400">{5 - hintsUsed}</div>
-                                <div className="text-sm text-gray-300">Chapters Solved Solo</div>
+                    <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 mb-8 border border-gray-200 shadow-xl">
+                        <h3 className="font-black text-2xl mb-6 text-slate-800">Your Performance</h3>
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="bg-amber-50 rounded-2xl p-6 border border-amber-100">
+                                <div className="text-4xl font-black text-amber-500 mb-2">{5 - hintsUsed}</div>
+                                <div className="text-sm font-bold text-amber-700/80 uppercase tracking-wider">Chapters Solved Solo</div>
                             </div>
-                            <div>
-                                <div className="text-3xl font-black text-orange-400">{hintsUsed}</div>
-                                <div className="text-sm text-gray-300">Hints Used</div>
+                            <div className="bg-orange-50 rounded-2xl p-6 border border-orange-100">
+                                <div className="text-4xl font-black text-orange-500 mb-2">{hintsUsed}</div>
+                                <div className="text-sm font-bold text-orange-700/80 uppercase tracking-wider">Hints Used</div>
                             </div>
                         </div>
                     </div>
                     <button
                         onClick={() => navigate('/gamified-assessment')}
-                        className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold text-lg transition-all"
+                        className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-lg transition-all shadow-md hover:shadow-lg hover:-translate-y-1"
                     >
                         Back to Games
                     </button>
@@ -172,29 +178,35 @@ export default function SQLDetective() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 text-white p-4 md:p-8">
+        <div className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8 relative overflow-hidden">
+            {/* Decorative background blobs */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-200/40 blur-3xl"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-200/40 blur-3xl"></div>
+            </div>
+
             {/* Header */}
             <div className="max-w-6xl mx-auto mb-8">
                 <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-3xl md:text-4xl font-black flex items-center gap-3">
-                        <Search className="h-8 w-8 text-yellow-400" />
+                    <h1 className="text-3xl md:text-4xl font-black flex items-center gap-3 text-slate-900">
+                        <Search className="h-8 w-8 text-amber-500" />
                         SQL Detective
                     </h1>
                     <button
                         onClick={() => navigate('/gamified-assessment')}
-                        className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all"
+                        className="px-4 py-2 bg-white border border-gray-200 text-slate-700 hover:text-indigo-600 hover:border-indigo-200 shadow-sm hover:shadow-md rounded-lg transition-all font-medium hover:-translate-y-1"
                     >
                         Exit Game
                     </button>
                 </div>
-                <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-blue-400" />
-                        <span>Chapter {chapter + 1} of {story.length}</span>
+                <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-wider">
+                    <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">
+                        <Clock className="h-4 w-4 text-blue-500" />
+                        <span className="text-slate-600">Chapter <span className="text-blue-600">{chapter + 1}</span> of {story.length}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <Lightbulb className="h-4 w-4 text-yellow-400" />
-                        <span>{hintsUsed} Hints Used</span>
+                    <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">
+                        <Lightbulb className="h-4 w-4 text-amber-500" />
+                        <span className="text-slate-600"><span className="text-amber-600">{hintsUsed}</span> Hints Used</span>
                     </div>
                 </div>
             </div>
@@ -202,77 +214,92 @@ export default function SQLDetective() {
             {/* Main Content */}
             <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
                 {/* Story Panel */}
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                        <FileText className="h-6 w-6 text-indigo-400" />
+                <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200 shadow-sm flex flex-col h-full">
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-slate-900 border-b border-gray-100 pb-4">
+                        <FileText className="h-6 w-6 text-indigo-500" />
                         {story[chapter].title}
                     </h2>
-                    <p className="text-indigo-100 leading-relaxed mb-6">
+                    <p className="text-slate-600 leading-relaxed mb-6 font-medium flex-grow">
                         {story[chapter].narrative}
                     </p>
-                    <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-xl p-4 mb-4">
-                        <h3 className="font-bold text-yellow-300 mb-2">🎯 Your Task:</h3>
-                        <p className="text-yellow-100 text-sm">{story[chapter].task}</p>
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6 shadow-sm">
+                        <h3 className="font-bold text-amber-700 flex items-center gap-2 mb-2 uppercase tracking-wider text-sm">
+                            <MapPin className="h-4 w-4" />
+                            Your Task:
+                        </h3>
+                        <p className="text-amber-900 font-medium">{story[chapter].task}</p>
                     </div>
                     <button
                         onClick={useHint}
-                        className="w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all"
+                        className="w-full py-4 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 shadow-sm hover:shadow-md rounded-xl font-bold transition-all flex items-center justify-center gap-2 mb-2 hover:-translate-y-1"
                     >
                         <Lightbulb className="h-5 w-5" />
                         {showHint ? "Hint Revealed Below" : "Need a Hint?"}
                     </button>
-                    {showHint && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mt-4 bg-green-500/20 border border-green-500/50 rounded-xl p-4"
-                        >
-                            <h3 className="font-bold text-green-300 mb-2">💡 Hint:</h3>
-                            <code className="text-green-100 text-sm block font-mono">{story[chapter].hint}</code>
-                        </motion.div>
-                    )}
+                    <AnimatePresence>
+                        {showHint && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                                animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                                exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                                className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 shadow-sm overflow-hidden"
+                            >
+                                <h3 className="font-bold text-emerald-700 flex items-center gap-2 mb-2 uppercase tracking-wider text-sm">
+                                    <Lightbulb className="h-4 w-4" />
+                                    Hint:
+                                </h3>
+                                <code className="text-emerald-800 text-sm block font-mono bg-emerald-100/50 p-3 rounded-lg border border-emerald-200/50">{story[chapter].hint}</code>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
                 {/* SQL Editor Panel */}
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                        <BookOpen className="h-6 w-6 text-green-400" />
+                <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200 shadow-sm flex flex-col h-full">
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-slate-900 border-b border-gray-100 pb-4">
+                        <BookOpen className="h-6 w-6 text-emerald-500" />
                         SQL Console
                     </h2>
                     <textarea
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Enter your SQL query here..."
-                        className="w-full h-32 bg-gray-900/50 border border-gray-600 rounded-xl p-4 text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
+                        className="w-full min-h-[160px] bg-slate-900 border border-slate-700 shadow-inner rounded-xl p-4 text-slate-50 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-6 resize-none"
+                        spellCheck="false"
                     />
                     <button
                         onClick={executeQuery}
-                        className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold transition-all mb-4"
+                        className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg rounded-xl font-bold transition-all mb-6 flex items-center justify-center gap-2 text-lg hover:-translate-y-1"
                     >
                         Execute Query
                     </button>
 
                     {/* Results */}
                     {results && (
-                        <div className="bg-gray-900/50 rounded-xl p-4 overflow-auto max-h-64">
-                            <h3 className="font-bold text-gray-300 mb-2">Query Results:</h3>
+                        <div className="bg-slate-50 border border-slate-200 shadow-sm rounded-xl p-4 overflow-auto max-h-64 flex-grow">
+                            <h3 className="font-bold text-slate-700 flex items-center gap-2 mb-3 uppercase tracking-wider text-sm">
+                                <Users className="h-4 w-4 text-slate-500" />
+                                Query Results:
+                            </h3>
                             {results.length === 0 ? (
-                                <p className="text-gray-500">No results found.</p>
+                                <div className="bg-slate-100 border border-slate-200 rounded-lg p-6 text-center">
+                                    <p className="text-slate-500 font-medium">No results found for your query.</p>
+                                </div>
                             ) : (
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-sm">
-                                        <thead>
-                                            <tr className="border-b border-gray-700">
+                                <div className="overflow-x-auto bg-white rounded-lg border border-slate-200">
+                                    <table className="w-full text-sm text-left">
+                                        <thead className="bg-slate-100 text-slate-600 font-bold uppercase tracking-wider text-xs border-b border-slate-200 sticky top-0">
+                                            <tr>
                                                 {Object.keys(results[0]).map((key) => (
-                                                    <th key={key} className="text-left p-2 text-gray-400">{key}</th>
+                                                    <th key={key} className="px-4 py-3">{key}</th>
                                                 ))}
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody className="divide-y divide-slate-100">
                                             {results.map((row, idx) => (
-                                                <tr key={idx} className="border-b border-gray-800">
+                                                <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
                                                     {Object.values(row).map((val, i) => (
-                                                        <td key={i} className="p-2 text-gray-200">{val}</td>
+                                                        <td key={i} className="px-4 py-3 text-slate-700 font-medium whitespace-nowrap">{val}</td>
                                                     ))}
                                                 </tr>
                                             ))}
@@ -287,26 +314,39 @@ export default function SQLDetective() {
 
             {/* Database Schema Reference */}
             <div className="max-w-6xl mx-auto mt-8">
-                <details className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10">
-                    <summary className="p-4 cursor-pointer font-bold hover:bg-white/5 rounded-2xl">
-                        📚 Database Schema Reference
+                <details className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-200 shadow-sm overflow-hidden group">
+                    <summary className="p-4 cursor-pointer font-bold hover:bg-slate-50 transition-colors flex items-center gap-2 text-slate-800">
+                        <BookOpen className="h-5 w-5 text-indigo-500" />
+                        Database Schema Reference
                     </summary>
-                    <div className="p-6 grid md:grid-cols-2 gap-4">
-                        <div className="bg-gray-900/50 rounded-xl p-4">
-                            <h4 className="font-bold text-indigo-400 mb-2">suspects</h4>
-                            <code className="text-xs text-gray-300">id, name, age, occupation, status</code>
+                    <div className="p-6 grid md:grid-cols-2 gap-4 bg-slate-50/50 border-t border-gray-100">
+                        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <h4 className="font-bold text-indigo-600 mb-2 flex items-center gap-2">
+                                <Users className="h-4 w-4" />
+                                suspects
+                            </h4>
+                            <code className="text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded block mt-2 font-mono break-all">id, name, age, occupation, status</code>
                         </div>
-                        <div className="bg-gray-900/50 rounded-xl p-4">
-                            <h4 className="font-bold text-indigo-400 mb-2">evidence</h4>
-                            <code className="text-xs text-gray-300">id, item, location, found_time, suspect_id</code>
+                        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <h4 className="font-bold text-indigo-600 mb-2 flex items-center gap-2">
+                                <Search className="h-4 w-4" />
+                                evidence
+                            </h4>
+                            <code className="text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded block mt-2 font-mono break-all">id, item, location, found_time, suspect_id</code>
                         </div>
-                        <div className="bg-gray-900/50 rounded-xl p-4">
-                            <h4 className="font-bold text-indigo-400 mb-2">locations</h4>
-                            <code className="text-xs text-gray-300">id, name, floor, access_level</code>
+                        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <h4 className="font-bold text-indigo-600 mb-2 flex items-center gap-2">
+                                <MapPin className="h-4 w-4" />
+                                locations
+                            </h4>
+                            <code className="text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded block mt-2 font-mono break-all">id, name, floor, access_level</code>
                         </div>
-                        <div className="bg-gray-900/50 rounded-xl p-4">
-                            <h4 className="font-bold text-indigo-400 mb-2">alibis</h4>
-                            <code className="text-xs text-gray-300">id, suspect_id, location, time, witness</code>
+                        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <h4 className="font-bold text-indigo-600 mb-2 flex items-center gap-2">
+                                <Clock className="h-4 w-4" />
+                                alibis
+                            </h4>
+                            <code className="text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded block mt-2 font-mono break-all">id, suspect_id, location, time, witness</code>
                         </div>
                     </div>
                 </details>

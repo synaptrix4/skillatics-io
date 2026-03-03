@@ -62,13 +62,13 @@ export default function StudentProfile() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-          <p className="mt-2 text-gray-600">Manage your personal information</p>
+          <h1 className="text-3xl font-bold text-slate-900">My Profile</h1>
+          <p className="mt-2 text-slate-600">Manage your personal information</p>
         </div>
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+            className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800"
           >
             <Edit2 className="h-4 w-4" />
             Edit Profile
@@ -91,40 +91,40 @@ export default function StudentProfile() {
       )}
 
       {/* Profile Form/Display */}
-      <form onSubmit={handleSubmit} className="rounded-xl border bg-white p-8 shadow-sm">
+      <form onSubmit={handleSubmit} className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="grid gap-6 md:grid-cols-2">
           {/* Name */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
             {isEditing ? (
               <div className="relative">
-                <User className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <User className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                 <input
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-gray-300 pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
+                  className="w-full rounded-lg border border-slate-200 pl-11 pr-4 py-3 outline-none ring-orange-500 transition-all focus:border-orange-500 focus:ring-2"
                   placeholder="Enter your full name"
                 />
               </div>
             ) : (
-              <p className="text-gray-900">{user.name || '-'}</p>
+              <p className="text-slate-900">{user.name || '-'}</p>
             )}
           </div>
 
           {/* Year of Study */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Year of Study</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Year of Study</label>
             {isEditing ? (
               <div className="relative">
-                <GraduationCap className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <GraduationCap className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                 <select
                   name="yearOfStudy"
                   value={form.yearOfStudy}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-gray-300 bg-white pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
+                  className="w-full rounded-lg border border-slate-200 bg-white pl-11 pr-4 py-3 outline-none ring-orange-500 transition-all focus:border-orange-500 focus:ring-2"
                 >
                   <option value="">Select Year</option>
                   <option>First Year</option>
@@ -134,23 +134,23 @@ export default function StudentProfile() {
                 </select>
               </div>
             ) : (
-              <p className="text-gray-900">{user.yearOfStudy || '-'}</p>
+              <p className="text-slate-900">{user.yearOfStudy || '-'}</p>
             )}
           </div>
 
           {/* Email (Read-only) */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-            <p className="text-gray-900">{user.email || '-'}</p>
-            <p className="mt-1 text-xs text-gray-500">Email cannot be changed</p>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+            <p className="text-slate-900">{user.email || '-'}</p>
+            <p className="mt-1 text-xs text-slate-500">Email cannot be changed</p>
           </div>
 
           {/* Mobile */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Mobile Number</label>
             {isEditing ? (
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <Phone className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                 <input
                   name="mobile"
                   value={form.mobile}
@@ -158,27 +158,27 @@ export default function StudentProfile() {
                   required
                   type="tel"
                   pattern="[0-9]{10,}"
-                  className="w-full rounded-lg border border-gray-300 pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
+                  className="w-full rounded-lg border border-slate-200 pl-11 pr-4 py-3 outline-none ring-orange-500 transition-all focus:border-orange-500 focus:ring-2"
                   placeholder="10-digit mobile number"
                 />
               </div>
             ) : (
-              <p className="text-gray-900">{user.mobile || '-'}</p>
+              <p className="text-slate-900">{user.mobile || '-'}</p>
             )}
           </div>
 
           {/* Gender */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Gender</label>
             {isEditing ? (
               <div className="relative">
-                <Users className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <Users className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                 <select
                   name="gender"
                   value={form.gender}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-gray-300 bg-white pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
+                  className="w-full rounded-lg border border-slate-200 bg-white pl-11 pr-4 py-3 outline-none ring-orange-500 transition-all focus:border-orange-500 focus:ring-2"
                 >
                   <option value="">Select Gender</option>
                   <option>Male</option>
@@ -187,22 +187,22 @@ export default function StudentProfile() {
                 </select>
               </div>
             ) : (
-              <p className="text-gray-900">{user.gender || '-'}</p>
+              <p className="text-slate-900">{user.gender || '-'}</p>
             )}
           </div>
 
           {/* Department */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Department</label>
             {isEditing ? (
               <div className="relative">
-                <Building2 className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <Building2 className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                 <select
                   name="department"
                   value={form.department}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-gray-300 bg-white pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
+                  className="w-full rounded-lg border border-slate-200 bg-white pl-11 pr-4 py-3 outline-none ring-orange-500 transition-all focus:border-orange-500 focus:ring-2"
                 >
                   <option value="">Select Department</option>
                   <option>Computer Engineering</option>
@@ -224,55 +224,55 @@ export default function StudentProfile() {
                 </select>
               </div>
             ) : (
-              <p className="text-gray-900">{user.department || '-'}</p>
+              <p className="text-slate-900">{user.department || '-'}</p>
             )}
           </div>
 
           {/* Division */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Division</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Division</label>
             {isEditing ? (
               <input
                 name="division"
                 value={form.division}
                 onChange={handleChange}
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
+                className="w-full rounded-lg border border-slate-200 px-4 py-3 outline-none ring-orange-500 transition-all focus:border-orange-500 focus:ring-2"
                 placeholder="e.g. A, B, C"
               />
             ) : (
-              <p className="text-gray-900">{user.division || '-'}</p>
+              <p className="text-slate-900">{user.division || '-'}</p>
             )}
           </div>
 
           {/* Roll No */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Roll Number</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Roll Number</label>
             {isEditing ? (
               <div className="relative">
-                <Hash className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <Hash className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                 <input
                   name="rollNo"
                   value={form.rollNo}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-gray-300 pl-11 pr-4 py-3 outline-none ring-indigo-500 transition-all focus:border-indigo-500 focus:ring-2"
+                  className="w-full rounded-lg border border-slate-200 pl-11 pr-4 py-3 outline-none ring-orange-500 transition-all focus:border-orange-500 focus:ring-2"
                   placeholder="e.g. 21CE1001"
                 />
               </div>
             ) : (
-              <p className="text-gray-900">{user.rollNo || '-'}</p>
+              <p className="text-slate-900">{user.rollNo || '-'}</p>
             )}
           </div>
         </div>
 
         {/* Action Buttons */}
         {isEditing && (
-          <div className="flex items-center gap-3 mt-6 pt-6 border-t">
+          <div className="flex items-center gap-3 mt-6 pt-6 border-t border-slate-100">
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-lg bg-orange-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? (
                 <>
@@ -289,7 +289,7 @@ export default function StudentProfile() {
             <button
               type="button"
               onClick={handleCancel}
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
             >
               <X className="h-4 w-4" />
               Cancel

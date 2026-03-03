@@ -20,11 +20,26 @@ export default function AdminQuestions() {
     setMsg('')
     setIsSuccess(false)
     try {
-      const payload = { ...q, options: q.options.split('|').map(s => s.trim()) }
+      let payload = { ...q };
+
+      if (q.type === 'coding') {
+        if (typeof q.test_cases === 'string' && q.test_cases.trim() !== '') {
+          try {
+            payload.test_cases = JSON.parse(q.test_cases);
+          } catch (err) {
+            setMsg('Invalid JSON format in Test Cases');
+            setIsSuccess(false);
+            return;
+          }
+        }
+      } else {
+        payload.options = q.options.split('|').map(s => s.trim());
+      }
+
       await addQuestion(payload)
       setMsg('Question added successfully!')
       setIsSuccess(true)
-      setQ({ text: '', topic: '', difficulty: 2, type: q.type, options: '', answer: '' })
+      setQ({ text: '', topic: '', difficulty: 2, type: q.type, options: '', answer: '', test_cases: '', function_name: '', input_format: '', starter_code: {} })
       setTimeout(() => { setMsg(''); setIsSuccess(false) }, 3000)
     } catch (e) {
       setMsg(e.response?.data?.error || 'Failed to add question')
@@ -149,31 +164,83 @@ export default function AdminQuestions() {
                 >
                   <option>General Aptitude</option>
                   <option>Technical Aptitude</option>
+                  <option value="coding">Coding Practice</option>
                 </select>
               </div>
+              {q.type !== 'coding' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Correct Answer</label>
+                  <input
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none ring-indigo-500 focus:border-indigo-500 focus:ring-2"
+                    value={q.answer}
+                    onChange={e => setQ({ ...q, answer: e.target.value })}
+                    placeholder="Must match one option"
+                  />
+                </div>
+              )}
+            </div>
+            {q.type !== 'coding' ? (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Correct Answer</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Options</label>
+                <div className="mb-2 flex items-start gap-2 rounded-lg bg-blue-50 border border-blue-200 px-3 py-2 text-xs text-blue-700">
+                  <HelpCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                  <span>Separate options with the pipe symbol (|). Example: Option A | Option B | Option C | Option D</span>
+                </div>
                 <input
                   className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none ring-indigo-500 focus:border-indigo-500 focus:ring-2"
-                  value={q.answer}
-                  onChange={e => setQ({ ...q, answer: e.target.value })}
-                  placeholder="Must match one option"
+                  value={q.options}
+                  onChange={e => setQ({ ...q, options: e.target.value })}
+                  placeholder="Option 1 | Option 2 | Option 3 | Option 4"
                 />
               </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Options</label>
-              <div className="mb-2 flex items-start gap-2 rounded-lg bg-blue-50 border border-blue-200 px-3 py-2 text-xs text-blue-700">
-                <HelpCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                <span>Separate options with the pipe symbol (|). Example: Option A | Option B | Option C | Option D</span>
-              </div>
-              <input
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none ring-indigo-500 focus:border-indigo-500 focus:ring-2"
-                value={q.options}
-                onChange={e => setQ({ ...q, options: e.target.value })}
-                placeholder="Option 1 | Option 2 | Option 3 | Option 4"
-              />
-            </div>
+            ) : (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Function Name</label>
+                    <input
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none ring-indigo-500 focus:border-indigo-500 focus:ring-2 font-mono text-sm"
+                      value={q.function_name || ''}
+                      onChange={e => setQ({ ...q, function_name: e.target.value })}
+                      placeholder="e.g., twoSum"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Input Format</label>
+                    <input
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none ring-indigo-500 focus:border-indigo-500 focus:ring-2 font-mono text-sm"
+                      value={q.input_format || ''}
+                      onChange={e => setQ({ ...q, input_format: e.target.value })}
+                      placeholder="e.g., array_int, int"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Starter Code (Python)</label>
+                  <textarea
+                    rows={3}
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none ring-indigo-500 focus:border-indigo-500 focus:ring-2 font-mono text-sm"
+                    value={q.starter_code?.python || ''}
+                    onChange={e => setQ({ ...q, starter_code: { ...q.starter_code, python: e.target.value } })}
+                    placeholder="def twoSum(nums, target):&#10;    pass"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Test Cases (JSON Array)</label>
+                  <div className="mb-2 flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-700">
+                    <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                    <span>Provide valid JSON: [{`{"input": "2 7 11 15\\n9", "expected_output": "0 1"}`}]</span>
+                  </div>
+                  <textarea
+                    rows={4}
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none ring-indigo-500 focus:border-indigo-500 focus:ring-2 font-mono text-sm"
+                    value={typeof q.test_cases === 'string' ? q.test_cases : ''}
+                    onChange={e => setQ({ ...q, test_cases: e.target.value })}
+                    placeholder='[{"input": "2 7 11 15\\n9", "expected_output": "0 1"}]'
+                  />
+                </div>
+              </>
+            )}
             <button
               className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
               onClick={addQ}

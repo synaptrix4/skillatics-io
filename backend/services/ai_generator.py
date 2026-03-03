@@ -32,28 +32,12 @@ class QuestionGenerator:
         # User can force a model via env var GEMINI_MODEL
         preferred = os.getenv("GEMINI_MODEL")
         candidates = [preferred] if preferred else [
-            "gemini-2.5-flash"
+            "gemini-2.5-flash",
+            "gemini-2.0-flash",
+            "gemini-flash-latest"
         ]
 
         last_error = None
-        
-        # Helper to try generation
-        for model_name in candidates:
-            try:
-                model = genai.GenerativeModel(model_name)
-                # We do the generation inside the loop to catch the specific 404 for that model
-                # Note: We need to move the prompt generation UP to avoid repeating it, 
-                # but for this refactor I'll just instantiate here and let the try/catch block below handle the call.
-                # Actually, simpler: just set self.model here? No, GenerativeModel is just a client.
-                # We will just break if we successfully instantiate? No, instantiation doesn't validate.
-                # We have to try generating.
-                
-                # ... Rest of logic needs to be indented or structural change ...
-                # optimization: Just pick the model string here, and let the main try/catch handle it?
-                # No, because we want to fail over.
-                pass 
-            except:
-                continue
 
         # REFACTORING for robustness:
         # We will wrap the generation call in a loop.
@@ -90,14 +74,16 @@ class QuestionGenerator:
                 
                 # If we get here, it worked! Process response
                 text = response.text.strip()
-                # ... processing logic ...
-                if text.startswith("```"):
-                    lines = text.splitlines()
-                    if lines[0].startswith("```"): lines = lines[1:]
-                    if lines[-1].startswith("```"): lines = lines[:-1]
-                    text = "\n".join(lines)
                 
-                questions = json.loads(text)
+                # Robustly find JSON array
+                start_idx = text.find('[')
+                end_idx = text.rfind(']')
+                
+                if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                    json_str = text[start_idx:end_idx+1]
+                    questions = json.loads(json_str)
+                else:
+                    raise Exception("Could not find a valid JSON array in the response")
                 
                 # Validate
                 valid_questions = []
